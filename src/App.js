@@ -1,10 +1,12 @@
 import React from "react"
+import MarkThreeConnect from "./components/MarkThreeConnect"
 
-const App = ({name}) => {
+const App = () => {
     return (
         <>
+            <MarkThreeConnect/>
             <h1 className="text-4xl text-white bg-black">
-                Hello {name}
+                Mark Three
             </h1>
         </>
     )

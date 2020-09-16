@@ -11,7 +11,7 @@ const render = () => {
 
     ReactDOM.render(
         <Provider store={store}>
-            <App name="Mark Three"/>
+            <App/>
         </Provider>,
         document.getElementById('app')
     )
