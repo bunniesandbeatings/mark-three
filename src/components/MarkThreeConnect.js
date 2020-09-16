@@ -1,26 +1,39 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect} from "react"
 import WebMidi from "webmidi"
+import {setStatus, STATUS_FOUND, STATUS_MIDI_FAILED, STATUS_SEARCHING, useMidi} from "../midi"
+import {useDispatch} from "react-redux"
 
 const MarkThreeConnect = () => {
-    const [once, setOnce] = useState(false);
+    const midi = useMidi()
+    const dispatch = useDispatch()
 
     useEffect(
         () => {
+            if (midi.status != STATUS_SEARCHING) {
+                return
+            }
+
             WebMidi.enable(function (err) {
                 if (err) {
-                    console.log("WebMidi could not be enabled.", err);
+                    dispatch(setStatus(STATUS_MIDI_FAILED))
+                    console.log("not")
                 } else {
-                    console.log("WebMidi enabled!");
-                    console.log(WebMidi.inputs);
-                    console.log(WebMidi.outputs);
+                    dispatch(setStatus({status: STATUS_FOUND, error: err}))
+                    // console.log(WebMidi.inputs);
+                    // // console.log(WebMidi.outputs);
                 }
-            });
-            setOnce(true)
+            })
+
         },
-        [once]
+        [midi.status]
     )
 
-    return null
+    return (
+        <p>
+            Status: {midi.status}
+        </p>
+    )
 }
+
 
 export default MarkThreeConnect
