@@ -2,15 +2,17 @@ import {createSlice} from '@reduxjs/toolkit'
 import {useSelector} from "react-redux"
 import WebMidi from "webmidi"
 
+export const STATUS_ENABLING = "enabling"
 export const STATUS_SEARCHING = "searching"
 export const STATUS_MIDI_FAILED = "midi_failed"
-export const STATUS_FOUND = "midi_found"
-export const STATUS_NOT_FOUND = "midi_not_found"
+export const STATUS_MIDI_CONNECTED = "midi_connected"
+export const STATUS_FOUND = "found"
+export const STATUS_NOT_FOUND = "not_found"
 
 const midi = createSlice({
     name: 'midi',
     initialState: {
-        status: STATUS_SEARCHING,
+        status: STATUS_ENABLING,
         error: ""
     },
     reducers: {
@@ -49,28 +51,44 @@ const MARK_THREE_PORT_NAME = "Novation SL MkIII SL MkIII MIDI"
 
 export const connect = () => (dispatch, getState) => {
     const state = getState()
-    if (state.midi.status !== STATUS_SEARCHING) {
+    if (state.midi.status !== STATUS_ENABLING) {
         return
     }
 
-    WebMidi.enable(function (err) {
-        if (err) {
-            dispatch(setStatus({status: STATUS_MIDI_FAILED, error: err}))
-        } else {
-            let input = WebMidi.inputs.find(input => input.name === MARK_THREE_PORT_NAME)
-            let output = WebMidi.inputs.find(output => output.name === MARK_THREE_PORT_NAME)
+    WebMidi.enable(
+        function (err) {
+            if (err) {
+                dispatch(setStatus({status: STATUS_MIDI_FAILED, error: err}))
+            } else {
+                dispatch(setStatus({status: STATUS_MIDI_CONNECTED}))
+                dispatch(find())
+            }
 
-            if (!input) {
-                dispatch(setStatus({status: STATUS_NOT_FOUND, error: `input '${MARK_THREE_PORT_NAME}' missing`}))
-                return
-            }
-            if (!output) {
-                dispatch(setStatus({status: STATUS_NOT_FOUND, error: `output '${MARK_THREE_PORT_NAME}' missing`}))
-                return
-            }
-            dispatch(setStatus({status: STATUS_FOUND}))
-        }
-    })
+            WebMidi.addListener("connected", function (e) {
+                dispatch(find())
+            })
+
+            WebMidi.addListener("disconnected", function (e) {
+                dispatch(find())
+            })
+        },
+        true
+    )
+}
+
+export const find = () => (dispatch) => {
+    let input = WebMidi.inputs.find(input => input.name === MARK_THREE_PORT_NAME)
+    let output = WebMidi.inputs.find(output => output.name === MARK_THREE_PORT_NAME)
+
+    if (!input) {
+        dispatch(setStatus({status: STATUS_NOT_FOUND, error: `input '${MARK_THREE_PORT_NAME}' missing`}))
+        return
+    }
+    if (!output) {
+        dispatch(setStatus({status: STATUS_NOT_FOUND, error: `output '${MARK_THREE_PORT_NAME}' missing`}))
+        return
+    }
+    dispatch(setStatus({status: STATUS_FOUND}))
 }
 
 export default midi.reducer
