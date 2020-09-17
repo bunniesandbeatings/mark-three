@@ -1,6 +1,5 @@
 import React, {useEffect} from "react"
-import WebMidi from "webmidi"
-import {setStatus, STATUS_FOUND, STATUS_MIDI_FAILED, STATUS_SEARCHING, useMidi} from "../midi"
+import {connect, useMidi} from "../midi"
 import {useDispatch} from "react-redux"
 
 const MarkThreeConnect = () => {
@@ -9,21 +8,7 @@ const MarkThreeConnect = () => {
 
     useEffect(
         () => {
-            if (midi.status != STATUS_SEARCHING) {
-                return
-            }
-
-            WebMidi.enable(function (err) {
-                if (err) {
-                    dispatch(setStatus(STATUS_MIDI_FAILED))
-                    console.log("not")
-                } else {
-                    dispatch(setStatus({status: STATUS_FOUND, error: err}))
-                    // console.log(WebMidi.inputs);
-                    // // console.log(WebMidi.outputs);
-                }
-            })
-
+            dispatch(connect())
         },
         [midi.status]
     )
