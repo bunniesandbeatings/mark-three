@@ -15,7 +15,6 @@ const midi = createSlice({
     },
     reducers: {
         setStatus(state, {payload: {status, error}}) {
-            console.log("called")
             state.status = status
             state.midiError = error
             return state
@@ -48,8 +47,6 @@ const dumpConnections = () => {
 
 const MARK_THREE_PORT_NAME = "Novation SL MkIII SL MkIII MIDI"
 
-// manufacturer: "Focusrite A.E.", name: "Novation SL MkIII SL MkIII MIDI", state: "connected", original: Output}
-
 export const connect = () => (dispatch, getState) => {
     const state = getState()
     if (state.midi.status !== STATUS_SEARCHING) {
@@ -74,7 +71,6 @@ export const connect = () => (dispatch, getState) => {
             dispatch(setStatus({status: STATUS_FOUND}))
         }
     })
-
 }
 
 export default midi.reducer
