@@ -2,11 +2,13 @@ import React from "react"
 import MarkThreeConnect from "./components/MarkThreeConnect"
 import logo from "./images/logo.svg"
 
-const DropDown = ({children}) => {
+const DropDown = ({children, onChange}) => {
     return (
         <div className="relative">
             <select
-                className="block appearance-none bg-gray-200 border border-white text-gray-900 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white">
+                className="drowdownblock appearance-none bg-gray-200 border border-white text-gray-900 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white"
+                onChange={onChange}
+            >
                 {children}
             </select>
             <div
@@ -22,7 +24,6 @@ const DropDown = ({children}) => {
 const App = () => {
     return (
         <div>
-
             <nav className="flex items-center justify-between flex-wrap bg-primary-500 p-4">
                 <div className="flex items-center flex-shrink-0 text-white mr-6">
                     <img src={logo} alt="Mark Three logo" className="h-12 w-12 mr-4"/>
@@ -46,19 +47,26 @@ const App = () => {
                     </div>
                 </div>
             </nav>
-            <div className="flex items-center justify-between flex-wrap bg-primary-900 px-4 py-2">
-                <DropDown>
-                    <option>Session 1</option>
-                    <option>Session 2</option>
-                    <option>Session 3</option>
-                    <option>Session 4</option>
-                    <option>Session 5</option>
-                </DropDown>
-                {/*    <p className="text-white">*/}
-                {/*    Session 1*/}
-                {/*    </p>*/}
-            </div>
 
+            <div className="flex items-center justify-between flex-wrap bg-primary-900 px-4 py-2">
+                <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+                    <DropDown onChange={e => console.log(e.target.value)}>
+                        <option value={1}>Session 1</option>
+                        <option value={2}>Session 2</option>
+                        <option value={3}>Session 3</option>
+                        <option value={4}>Session 4</option>
+                        <option value={5}>Session 5</option>
+                    </DropDown>
+
+                    <button className="btn btn-blue">
+                        <i className="fas fa-upload"/> Send
+                    </button>
+
+                    <button className="btn btn-blue">
+                        <i className="fas fa-download"/> Receive
+                    </button>
+                </div>
+            </div>
         </div>
     )
 }

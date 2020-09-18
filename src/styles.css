@@ -5,3 +5,44 @@
 body {
     @apply bg-primary-100;
 }
+
+.btn {
+    @apply font-bold;
+    @apply py-1;
+    @apply px-4;
+    @apply rounded;
+    @apply ml-2;
+}
+
+.btn-blue {
+    @apply bg-blue-500 text-white;
+}
+
+.btn-blue:hover {
+    @apply bg-blue-700;
+}
+
+
+.dropdown {
+    @apply block;
+    @apply appearance-none;
+    @apply border;
+    @apply py-1;
+    @apply px-4;
+    @apply pr-8;
+    @apply rounded;
+    @apply leading-tight;
+    focus:outline-none;
+    @apply bg-gray-200;
+    @apply border-white;
+    @apply text-gray-900;
+    focus:bg-white;
+
+}
+
+.dropdown-default {
+    @apply bg-gray-200;
+    @apply border-white;
+    @apply text-gray-900;
+    focus:bg-white;
+}
