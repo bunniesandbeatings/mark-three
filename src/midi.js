@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {useSelector} from "react-redux"
 import WebMidi from "webmidi"
+import {discover, loadTemplate} from "./mkIII"
 
 export const STATUS_ENABLING = "enabling"
 export const STATUS_SEARCHING = "searching"
@@ -24,31 +25,30 @@ const midi = createSlice({
     }
 })
 
-export const {setStatus} = midi.actions
+export const {
+    setStatus,
+    clearRawTemplate,
+    appendRawTemplate
+} = midi.actions
 
 export const useMidi = () =>
     useSelector(state => {
         return state.midi
     })
 
-const midiObj = (o) => {
-    return {
-        manufacturer: o.manufacturer,
-        name: o.name,
-        state: o.state,
-        original: o
+
+const find = () => (dispatch) => {
+    let {connected, error} = discover()
+
+    if (connected) {
+        dispatch(setStatus({status: STATUS_FOUND}))
+    } else {
+        dispatch(setStatus({status: STATUS_NOT_FOUND, error}))
     }
 }
 
-const dumpConnections = () => {
-    console.log("in")
-    WebMidi.inputs.forEach(input => console.log(midiObj(input)))
-    console.log("out")
-    WebMidi.outputs.forEach(output => console.log(midiObj(output)))
-}
 
-const MARK_THREE_PORT_NAME = "Novation SL MkIII SL MkIII MIDI"
-
+// TODO move this to mkIII and make it and async solution
 export const connect = () => (dispatch, getState) => {
     const state = getState()
     if (state.midi.status !== STATUS_ENABLING) {
@@ -76,19 +76,8 @@ export const connect = () => (dispatch, getState) => {
     )
 }
 
-export const find = () => (dispatch) => {
-    let input = WebMidi.inputs.find(input => input.name === MARK_THREE_PORT_NAME)
-    let output = WebMidi.inputs.find(output => output.name === MARK_THREE_PORT_NAME)
-
-    if (!input) {
-        dispatch(setStatus({status: STATUS_NOT_FOUND, error: `input '${MARK_THREE_PORT_NAME}' missing`}))
-        return
-    }
-    if (!output) {
-        dispatch(setStatus({status: STATUS_NOT_FOUND, error: `output '${MARK_THREE_PORT_NAME}' missing`}))
-        return
-    }
-    dispatch(setStatus({status: STATUS_FOUND}))
+export const fetchTemplate = (templateNumber) => () => {
+    loadTemplate(templateNumber)
 }
 
 export default midi.reducer

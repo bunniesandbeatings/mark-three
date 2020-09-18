@@ -32,17 +32,14 @@ body {
     @apply pr-8;
     @apply rounded;
     @apply leading-tight;
-    focus:outline-none;
-    @apply bg-gray-200;
-    @apply border-white;
-    @apply text-gray-900;
-    focus:bg-white;
 
 }
 
 .dropdown-default {
-    @apply bg-gray-200;
+    @apply bg-white;
     @apply border-white;
     @apply text-gray-900;
-    focus:bg-white;
 }
+
+
+  /*appearance-none bg-gray-200 border border-white text-gray-900 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white*/

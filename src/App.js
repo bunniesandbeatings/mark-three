@@ -1,12 +1,14 @@
 import React from "react"
 import MarkThreeConnect from "./components/MarkThreeConnect"
 import logo from "./images/logo.svg"
+import {useDispatch} from "react-redux"
+import {fetchTemplate, STATUS_FOUND, useMidi} from "./midi"
 
 const DropDown = ({children, onChange}) => {
     return (
         <div className="relative">
             <select
-                className="drowdownblock appearance-none bg-gray-200 border border-white text-gray-900 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white"
+                className="dropdown dropdown-default focus:outline-white focus:bg-white"
                 onChange={onChange}
             >
                 {children}
@@ -16,6 +18,40 @@ const DropDown = ({children, onChange}) => {
                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                 </svg>
+            </div>
+        </div>
+    )
+}
+
+const SessionSelector = () => {
+    const dispatch = useDispatch()
+    const midi = useMidi()
+
+    const receiveHandler = e => {
+        dispatch(fetchTemplate(1))
+    }
+
+    return (
+        <div className="flex items-center justify-between flex-wrap bg-primary-900 px-4 py-2">
+            <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+                <DropDown onChange={e => console.log(e.target.value)}>
+                    <option value={1}>Session 1</option>
+                    <option value={2}>Session 2</option>
+                    <option value={3}>Session 3</option>
+                    <option value={4}>Session 4</option>
+                    <option value={5}>Session 5</option>
+                </DropDown>
+
+                {(midi.status === STATUS_FOUND) && <>
+                    <button className="btn btn-blue">
+                        <i className="fas fa-upload"/> Send
+                    </button>
+
+                    <button className="btn btn-blue" onClick={receiveHandler}>
+                        <i className="fas fa-download"/> Receive
+                    </button>
+                </>
+                }
             </div>
         </div>
     )
@@ -48,25 +84,7 @@ const App = () => {
                 </div>
             </nav>
 
-            <div className="flex items-center justify-between flex-wrap bg-primary-900 px-4 py-2">
-                <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-                    <DropDown onChange={e => console.log(e.target.value)}>
-                        <option value={1}>Session 1</option>
-                        <option value={2}>Session 2</option>
-                        <option value={3}>Session 3</option>
-                        <option value={4}>Session 4</option>
-                        <option value={5}>Session 5</option>
-                    </DropDown>
-
-                    <button className="btn btn-blue">
-                        <i className="fas fa-upload"/> Send
-                    </button>
-
-                    <button className="btn btn-blue">
-                        <i className="fas fa-download"/> Receive
-                    </button>
-                </div>
-            </div>
+            <SessionSelector/>
         </div>
     )
 }
