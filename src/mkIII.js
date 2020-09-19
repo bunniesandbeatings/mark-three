@@ -10,14 +10,27 @@ const TEMPLATE_ID = id => [id, 0x02]
 
 const MARK_THREE_PORT_NAME = "Novation SL MkIII SL MkIII MIDI"
 
-let rawTemplate = []
+const noOpFn = () => {
+}
+
+const defaultTemplate = id => (
+    {
+        id: id,
+        data: [],
+        onLoad: noOpFn,
+        lastSeqID: 0
+    }
+)
+
+let rawTemplate = new Array(64)
+
 let input, output
 
-const SYSEX_templateGet = templateNumber => [
+const SYSEX_templateGet = templateID => [
     ...CMD_XFER,
     ...PKT_START,
     ...SEQ_ID(0),
-    ...TEMPLATE_ID(templateNumber - 1)
+    ...TEMPLATE_ID(templateID)
 ]
 
 
@@ -46,7 +59,7 @@ const fromManufacturer = (data, manufacturer) => {
         return {packet: [], match: false}
     }
 
-    return {packet: data.slice(4, data.length-1), match: true}
+    return {packet: data.slice(4, data.length - 1), match: true}
 }
 
 const fromMKIII = (data) => {
@@ -58,9 +71,65 @@ const fromMKIII = (data) => {
     }
 }
 
+const XFER_CMD_START = 0x01
+const XFER_CMD_PACKET = 0x02
+const XFER_CMD_END = 0x03
+
+// const XFER_CMD_RESPONSE = 0x04
+
+function toHexString(byteArray, len = null) {
+    if (len === null) {
+        len = byteArray.length
+    }
+    let result = byteArray.reduce(
+        (output, elem) => (output + ('0' + elem.toString(16).toUpperCase()).slice(-2) + ' '),
+        ''
+    )
+    return result.trim()
+}
+
+function toTextString(byteArray, len = null) {
+    if (len === null) {
+        len = byteArray.length
+    }
+    return byteArray.reduce(
+        (output, elem) => (output + String.fromCharCode(elem)),
+        ''
+    )
+}
+
 const handleTemplateTransferCommand = (packet) => {
     // console.log("INFO: Incoming Template Transfer Command")
-    console.log(packet)
+    let seqID = packet[8]
+    let packetType = packet[0]
+    let templateID = packet[10]
+    let data = _.slice(packet, 12)
+
+    // console.log({seqID, packetType, templateID, data: toHexString(data), text: toTextString(data)})
+
+    const template = rawTemplate[templateID]
+    const nextSeqID = template.lastSeqID + 1
+
+    switch (packetType) {
+        case XFER_CMD_START: // currently looks safe to ignore
+            break;
+        case XFER_CMD_PACKET:
+            if (nextSeqID !== seqID) {
+                throw `Template fetch sequence error, expected: ${nextSeqID}, got: ${seqID}`
+            }
+            template.lastSeqID = nextSeqID
+            template.data = template.data.concat(data)
+            break;
+        case XFER_CMD_END:
+            console.log({
+                hex: toHexString(template.data),
+                text: toTextString(template.data)
+            })
+            template.onLoad(template)
+            break;
+        default:
+            throw `Template fetch error, got command id: ${toHexString([packetType])}`
+    }
 }
 
 const handleCommand = (command, packet) => {
@@ -112,8 +181,8 @@ export const discover = () => {
     return {connected: true, error: null}
 }
 
-export const loadTemplate = (number) => {
-    rawTemplate[number] = []
+export const loadTemplate = (templateID) => {
+    rawTemplate[templateID] = defaultTemplate(templateID)
 
-    output.sendSysex(MFR_ID, SYSEX_templateGet(number))
+    output.sendSysex(MFR_ID, SYSEX_templateGet(templateID))
 }

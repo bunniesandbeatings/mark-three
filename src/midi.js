@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {useSelector} from "react-redux"
 import WebMidi from "webmidi"
-import {discover, loadTemplate} from "./mkIII"
+import {discover} from "./mkIII"
 
 export const STATUS_ENABLING = "enabling"
 export const STATUS_SEARCHING = "searching"
@@ -27,8 +27,6 @@ const midi = createSlice({
 
 export const {
     setStatus,
-    clearRawTemplate,
-    appendRawTemplate
 } = midi.actions
 
 export const useMidi = () =>
@@ -74,10 +72,6 @@ export const connect = () => (dispatch, getState) => {
         },
         true
     )
-}
-
-export const fetchTemplate = (templateNumber) => () => {
-    loadTemplate(templateNumber)
 }
 
 export default midi.reducer

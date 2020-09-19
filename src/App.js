@@ -2,14 +2,17 @@ import React from "react"
 import MarkThreeConnect from "./components/MarkThreeConnect"
 import logo from "./images/logo.svg"
 import {useDispatch} from "react-redux"
-import {fetchTemplate, STATUS_FOUND, useMidi} from "./midi"
+import {STATUS_FOUND, useMidi} from "./midi"
+import _ from "lodash"
+import {fetchTemplate, selectTemplate, useActiveTemplate} from "./templates"
 
-const DropDown = ({children, onChange}) => {
+const DropDown = ({children, onChange, value}) => {
     return (
         <div className="relative">
             <select
                 className="dropdown dropdown-default focus:outline-white focus:bg-white"
                 onChange={onChange}
+                value={value}
             >
                 {children}
             </select>
@@ -23,23 +26,27 @@ const DropDown = ({children, onChange}) => {
     )
 }
 
-const SessionSelector = () => {
+const TemplateSelector = () => {
     const dispatch = useDispatch()
     const midi = useMidi()
+    const activeTemplateID = useActiveTemplate()
 
     const receiveHandler = e => {
-        dispatch(fetchTemplate(1))
+        dispatch(fetchTemplate(activeTemplateID))
     }
+
+    const handleSelectChange = e => dispatch(selectTemplate(e.target.value))
 
     return (
         <div className="flex items-center justify-between flex-wrap bg-primary-900 px-4 py-2">
             <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-                <DropDown onChange={e => console.log(e.target.value)}>
-                    <option value={1}>Session 1</option>
-                    <option value={2}>Session 2</option>
-                    <option value={3}>Session 3</option>
-                    <option value={4}>Session 4</option>
-                    <option value={5}>Session 5</option>
+                <DropDown onChange={handleSelectChange} value={activeTemplateID}>
+                    {_.range(64).map(
+                        id =>
+                            <option value={id} key={id}>
+                                Template {id + 1}
+                            </option>
+                    )}
                 </DropDown>
 
                 {(midi.status === STATUS_FOUND) && <>
@@ -64,18 +71,13 @@ const App = () => {
                 <div className="flex items-center flex-shrink-0 text-white mr-6">
                     <img src={logo} alt="Mark Three logo" className="h-12 w-12 mr-4"/>
                     <span className="font-semibold text-xl tracking-tight">Mark Three</span>
-
                 </div>
 
                 <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
                     <div className="text-sm lg:flex-grow">
                         {/*<a href="#responsive-header"*/}
                         {/*   className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">*/}
-                        {/*    Menu*/}
-                        {/*</a>*/}
-                        {/*<a href="#responsive-header"*/}
-                        {/*   className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">*/}
-                        {/*    items*/}
+                        {/*    Menu Items here*/}
                         {/*</a>*/}
                     </div>
                     <div>
@@ -84,7 +86,7 @@ const App = () => {
                 </div>
             </nav>
 
-            <SessionSelector/>
+            <TemplateSelector/>
         </div>
     )
 }
