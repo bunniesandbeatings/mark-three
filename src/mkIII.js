@@ -1,9 +1,9 @@
 import WebMidi from "webmidi"
 import _ from "lodash"
 
-const MFR_ID = new Uint8Array([0x00, 0x20, 0x29])
-const CMD_XFER = new Uint8Array([0x02, 0x0A, 0x03])
-const PKT_START = new Uint8Array([0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+const MFR_ID = [0x00, 0x20, 0x29]
+const CMD_XFER = [0x02, 0x0A, 0x03]
+const PKT_START = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
 
 const SEQ_ID = id => [id, 0x02]
 const TEMPLATE_ID = id => [id, 0x02]
@@ -46,7 +46,7 @@ const fromManufacturer = (data, manufacturer) => {
         return {packet: [], match: false}
     }
 
-    return {packet: data.slice(4, data.length), match: true}
+    return {packet: data.slice(4, data.length-1), match: true}
 }
 
 const fromMKIII = (data) => {
@@ -58,15 +58,29 @@ const fromMKIII = (data) => {
     }
 }
 
-const handleSysexInput = (r) => {
-    let {data, target} = r
-    console.log(target)
+const handleTemplateTransferCommand = (packet) => {
+    // console.log("INFO: Incoming Template Transfer Command")
+    console.log(packet)
+}
+
+const handleCommand = (command, packet) => {
+    // console.log(`INFO: Lookup command [${command}]`)
+    if (_.isEqual(command, CMD_XFER)) {
+        handleTemplateTransferCommand(packet)
+        return
+    }
+    console.log(`WARNING: Command not handled: [${command}]`)
+}
+
+const handleSysexInput = ({data}) => {
+    data = Array.from(data)
     let {command, packet, match} = fromMKIII(data)
-    if (match) {
-        console.log(command)
-        console.log(packet)
+    if (!match) {
+        console.log("WARNING: received packet from non-MKIII MFR ID.")
+        return
     }
 
+    handleCommand(command, packet)
 }
 
 // FIXME this is called waaay to often on startup
@@ -101,5 +115,5 @@ export const discover = () => {
 export const loadTemplate = (number) => {
     rawTemplate[number] = []
 
-    output.sendSysex(Array.from(MFR_ID), SYSEX_templateGet(number))
+    output.sendSysex(MFR_ID, SYSEX_templateGet(number))
 }
