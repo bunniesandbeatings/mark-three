@@ -121,10 +121,10 @@ const handleTemplateTransferCommand = (packet) => {
             template.data = template.data.concat(data)
             break;
         case XFER_CMD_END:
-            console.log({
-                hex: toHexString(template.data),
-                text: toTextString(template.data)
-            })
+            // console.log({
+            //     hex: toHexString(template.data),
+            //     text: toTextString(template.data)
+            // })
             template.onLoad(template)
             break;
         default:
