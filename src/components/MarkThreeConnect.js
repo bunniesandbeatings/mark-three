@@ -1,14 +1,15 @@
 import React, {useEffect} from "react"
+import {useDispatch} from "react-redux"
 import {
     connect,
+    STATUS_ENABLING,
     STATUS_FOUND,
-    STATUS_SEARCHING,
+    STATUS_MIDI_CONNECTED,
     STATUS_MIDI_FAILED,
     STATUS_NOT_FOUND,
-    STATUS_ENABLING,
-    useMidi, STATUS_MIDI_CONNECTED,
+    STATUS_SEARCHING,
+    useMidi
 } from "../midi"
-import {useDispatch} from "react-redux"
 
 const statusText = {}
 statusText[STATUS_ENABLING] = "Enabling MIDI"

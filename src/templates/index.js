@@ -1,8 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {useSelector} from "react-redux"
-import {loadTemplate} from "./mkIII"
+import {loadTemplate} from "../lib/mkIII/mkIII"
 
-const templates = createSlice({
+const index = createSlice({
     name: 'templates',
     initialState: {
         raw: Array.from({length:64}, () => []),  // Filled Array of Arrays
@@ -23,7 +23,7 @@ const templates = createSlice({
 export const {
     selectTemplate,
     setRawTemplate
-} = templates.actions
+} = index.actions
 
 export const useTemplates = () =>
     useSelector(state => {
@@ -51,4 +51,4 @@ export const fetchTemplate = (templateID) => (dispatch) => {
     })
 }
 
-export default templates.reducer
+export default index.reducer

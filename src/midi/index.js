@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {useSelector} from "react-redux"
 import WebMidi from "webmidi"
-import {discover} from "./mkIII"
+import {discover} from "../lib/mkIII/mkIII"
 
 export const STATUS_ENABLING = "enabling"
 export const STATUS_SEARCHING = "searching"
@@ -10,7 +10,7 @@ export const STATUS_MIDI_CONNECTED = "midi_connected"
 export const STATUS_FOUND = "found"
 export const STATUS_NOT_FOUND = "not_found"
 
-const midi = createSlice({
+const index = createSlice({
     name: 'midi',
     initialState: {
         status: STATUS_ENABLING,
@@ -27,7 +27,7 @@ const midi = createSlice({
 
 export const {
     setStatus,
-} = midi.actions
+} = index.actions
 
 export const useMidi = () =>
     useSelector(state => {
@@ -44,7 +44,6 @@ const find = () => (dispatch) => {
         dispatch(setStatus({status: STATUS_NOT_FOUND, error}))
     }
 }
-
 
 // TODO move this to mkIII and make it and async solution
 export const connect = () => (dispatch, getState) => {
@@ -74,4 +73,4 @@ export const connect = () => (dispatch, getState) => {
     )
 }
 
-export default midi.reducer
+export default index.reducer

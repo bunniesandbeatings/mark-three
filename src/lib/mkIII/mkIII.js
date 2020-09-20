@@ -33,23 +33,6 @@ const SYSEX_templateGet = templateID => [
     ...TEMPLATE_ID(templateID)
 ]
 
-
-const midiObj = (o) => {
-    return {
-        manufacturer: o.manufacturer,
-        name: o.name,
-        state: o.state,
-        original: o
-    }
-}
-
-const dumpConnections = () => {
-    console.log("in")
-    WebMidi.inputs.forEach(input => console.log(midiObj(input)))
-    console.log("out")
-    WebMidi.outputs.forEach(output => console.log(midiObj(output)))
-}
-
 const fromManufacturer = (data, manufacturer) => {
     if (data[0] !== 0xF0) {
         return {data: [], match: false}
@@ -76,26 +59,6 @@ const XFER_CMD_PACKET = 0x02
 const XFER_CMD_END = 0x03
 // const XFER_CMD_RESPONSE = 0x04
 
-function toHexString(byteArray, len = null) {
-    if (len === null) {
-        len = byteArray.length
-    }
-    let result = byteArray.reduce(
-        (output, elem) => (output + ('0' + elem.toString(16).toUpperCase()).slice(-2) + ' '),
-        ''
-    )
-    return result.trim()
-}
-
-function toTextString(byteArray, len = null) {
-    if (len === null) {
-        len = byteArray.length
-    }
-    return byteArray.reduce(
-        (output, elem) => (output + String.fromCharCode(elem)),
-        ''
-    )
-}
 
 const handleTemplateTransferCommand = (packet) => {
     let header = packet.slice(0,10)
