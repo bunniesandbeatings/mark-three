@@ -13,11 +13,11 @@ const MARK_THREE_PORT_NAME = "Novation SL MkIII SL MkIII MIDI"
 const noOpFn = () => {
 }
 
-const defaultTemplate = id => (
+const defaultTemplate = (id, callback=noOpFn) => (
     {
         id: id,
         data: [],
-        onLoad: noOpFn,
+        onLoad: callback,
         lastSeqID: 0
     }
 )
@@ -181,8 +181,9 @@ export const discover = () => {
     return {connected: true, error: null}
 }
 
-export const loadTemplate = (templateID) => {
-    rawTemplate[templateID] = defaultTemplate(templateID)
+export const loadTemplate = (templateID, callback) => {
+    templateID = Number(templateID)
+    rawTemplate[templateID] = defaultTemplate(templateID, callback)
 
     output.sendSysex(MFR_ID, SYSEX_templateGet(templateID))
 }
