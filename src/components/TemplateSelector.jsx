@@ -1,15 +1,20 @@
 import React from "react"
-import {useDispatch} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import {fetchTemplate, selectTemplate, useActiveTemplateID} from "../templates"
 import _ from "lodash"
 import {STATUS_FOUND, useMidi} from "../midi"
 import DropDown from "./DropDown"
 
+export const useTemplateNames = () =>
+    useSelector(state => {
+        return state.templates.list.map(t => `${t.displayID}:  ${t.name}`)
+    })
+
 export const TemplateSelector = () => {
     const dispatch = useDispatch()
     const midi = useMidi()
+    const templateNames = useTemplateNames()
     const activeTemplateID = useActiveTemplateID()
-
     const receiveHandler = _ => {
         dispatch(fetchTemplate(activeTemplateID))
     }
@@ -23,7 +28,7 @@ export const TemplateSelector = () => {
                     {_.range(64).map(
                         id =>
                             <option value={id} key={id}>
-                                Template {id + 1}
+                                {templateNames[id]}
                             </option>
                     )}
                 </DropDown>
