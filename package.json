@@ -13,10 +13,13 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
+    "lodash": "^4.17.20",
+    "midi": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
     "tailwindcss": "^1.8.10",
+    "templates": "^1.2.9",
     "webmidi": "^2.5.1"
   },
   "devDependencies": {

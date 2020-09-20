@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {useSelector} from "react-redux"
 import WebMidi from "webmidi"
+import {discover} from "../lib/mkIII/mkIII"
 
 export const STATUS_ENABLING = "enabling"
 export const STATUS_SEARCHING = "searching"
@@ -9,7 +10,7 @@ export const STATUS_MIDI_CONNECTED = "midi_connected"
 export const STATUS_FOUND = "found"
 export const STATUS_NOT_FOUND = "not_found"
 
-const midi = createSlice({
+const index = createSlice({
     name: 'midi',
     initialState: {
         status: STATUS_ENABLING,
@@ -24,31 +25,27 @@ const midi = createSlice({
     }
 })
 
-export const {setStatus} = midi.actions
+export const {
+    setStatus,
+} = index.actions
 
 export const useMidi = () =>
     useSelector(state => {
         return state.midi
     })
 
-const midiObj = (o) => {
-    return {
-        manufacturer: o.manufacturer,
-        name: o.name,
-        state: o.state,
-        original: o
+
+const find = () => (dispatch) => {
+    let {connected, error} = discover()
+
+    if (connected) {
+        dispatch(setStatus({status: STATUS_FOUND}))
+    } else {
+        dispatch(setStatus({status: STATUS_NOT_FOUND, error}))
     }
 }
 
-const dumpConnections = () => {
-    console.log("in")
-    WebMidi.inputs.forEach(input => console.log(midiObj(input)))
-    console.log("out")
-    WebMidi.outputs.forEach(output => console.log(midiObj(output)))
-}
-
-const MARK_THREE_PORT_NAME = "Novation SL MkIII SL MkIII MIDI"
-
+// TODO move this to mkIII and make it and async solution
 export const connect = () => (dispatch, getState) => {
     const state = getState()
     if (state.midi.status !== STATUS_ENABLING) {
@@ -76,19 +73,4 @@ export const connect = () => (dispatch, getState) => {
     )
 }
 
-export const find = () => (dispatch) => {
-    let input = WebMidi.inputs.find(input => input.name === MARK_THREE_PORT_NAME)
-    let output = WebMidi.inputs.find(output => output.name === MARK_THREE_PORT_NAME)
-
-    if (!input) {
-        dispatch(setStatus({status: STATUS_NOT_FOUND, error: `input '${MARK_THREE_PORT_NAME}' missing`}))
-        return
-    }
-    if (!output) {
-        dispatch(setStatus({status: STATUS_NOT_FOUND, error: `output '${MARK_THREE_PORT_NAME}' missing`}))
-        return
-    }
-    dispatch(setStatus({status: STATUS_FOUND}))
-}
-
-export default midi.reducer
+export default index.reducer
