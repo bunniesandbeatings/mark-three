@@ -13,7 +13,7 @@ const MARK_THREE_PORT_NAME = "Novation SL MkIII SL MkIII MIDI"
 const noOpFn = () => {
 }
 
-const defaultTemplate = (id, callback=noOpFn) => (
+const defaultTemplate = (id, callback = noOpFn) => (
     {
         id: id,
         data: [],
@@ -74,7 +74,6 @@ const fromMKIII = (data) => {
 const XFER_CMD_START = 0x01
 const XFER_CMD_PACKET = 0x02
 const XFER_CMD_END = 0x03
-
 // const XFER_CMD_RESPONSE = 0x04
 
 function toHexString(byteArray, len = null) {
@@ -99,13 +98,12 @@ function toTextString(byteArray, len = null) {
 }
 
 const handleTemplateTransferCommand = (packet) => {
-    // console.log("INFO: Incoming Template Transfer Command")
-    let seqID = packet[8]
-    let packetType = packet[0]
-    let templateID = packet[10]
-    let data = _.slice(packet, 12)
+    let header = packet.slice(0,10)
+    packet = packet.slice(10)
 
-    // console.log({seqID, packetType, templateID, data: toHexString(data), text: toTextString(data)})
+    let packetType = header[0x00]
+    let seqID = header[0x07]
+    let templateID = header[0x09]
 
     const template = rawTemplate[templateID]
     const nextSeqID = template.lastSeqID + 1
@@ -118,19 +116,17 @@ const handleTemplateTransferCommand = (packet) => {
                 throw `Template fetch sequence error, expected: ${nextSeqID}, got: ${seqID}`
             }
             template.lastSeqID = nextSeqID
-            template.data = template.data.concat(data)
+            template.data = template.data.concat(packet)
             break;
         case XFER_CMD_END:
-            // console.log({
-            //     hex: toHexString(template.data),
-            //     text: toTextString(template.data)
-            // })
             template.onLoad(template)
             break;
         default:
             throw `Template fetch error, got command id: ${toHexString([packetType])}`
     }
 }
+// rip out every 8th element starting at the 4th and then remove the header
+const unpack = packet => packet.filter((_, index) => (index - 3) % 8)
 
 const handleCommand = (command, packet) => {
     // console.log(`INFO: Lookup command [${command}]`)
@@ -148,8 +144,8 @@ const handleSysexInput = ({data}) => {
         console.log("WARNING: received packet from non-MKIII MFR ID.")
         return
     }
-
-    handleCommand(command, packet)
+    let unpacked = unpack(packet)
+    handleCommand(command, unpacked)
 }
 
 // FIXME this is called waaay to often on startup

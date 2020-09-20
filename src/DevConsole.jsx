@@ -69,14 +69,14 @@ const HexPrinter = ({data, columns = 16, rows = 20, heading = false, rowHeading 
 
 
 export const DevConsole = () => {
-    if (process.env.NODE_ENV == 'production') {
+    if (process.env.NODE_ENV === 'production') {
         return null
     }
 
     const {raw} = useActiveTemplate()
 
     const [offset, setOffset] = useState(0)
-    const [width, setWidth] = useState(50)
+    const [width, setWidth] = useState(44)
 
     const key = [
         PADDING + " 0x00 padding?",
