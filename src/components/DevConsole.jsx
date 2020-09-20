@@ -76,7 +76,7 @@ export const DevConsole = () => {
     const {raw} = useActiveTemplate()
 
     const [offset, setOffset] = useState(0)
-    const [width, setWidth] = useState(44)
+    const [width, setWidth] = useState(22)
 
     const key = [
         PADDING + " 0x00 padding?",

@@ -1,4 +1,4 @@
-export const toHexString = byteArray => {
+export const toHex = byteArray => {
     let result = byteArray.reduce(
         (output, elem) => (output + ('0' + elem.toString(16).toUpperCase()).slice(-2) + ' '),
         ''
@@ -6,7 +6,7 @@ export const toHexString = byteArray => {
     return result.trim()
 }
 
-export const toTextString = byteArray => {
+export const toText = byteArray => {
     return byteArray.reduce(
         (output, elem) => (output + String.fromCharCode(elem)),
         ''

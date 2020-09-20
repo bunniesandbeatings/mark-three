@@ -1,5 +1,6 @@
 import WebMidi from "webmidi"
 import _ from "lodash"
+import {toHex} from "../../util/byte"
 
 const MFR_ID = [0x00, 0x20, 0x29]
 const CMD_XFER = [0x02, 0x0A, 0x03]
@@ -85,7 +86,7 @@ const handleTemplateTransferCommand = (packet) => {
             template.onLoad(template)
             break;
         default:
-            throw `Template fetch error, got command id: ${toHexString([packetType])}`
+            throw `Template fetch error, got command id: ${toHex([packetType])}`
     }
 }
 // rip out every 8th element starting at the 4th and then remove the header
