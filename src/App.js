@@ -3,6 +3,7 @@ import MarkThreeConnect from "./components/MarkThreeConnect"
 import TemplateSelector from "./components/TemplateSelector"
 import DevConsole from "./components/DevConsole"
 import logo from "./images/logo.svg"
+import TemplateEditor from "./components/TemplateEditor"
 
 const App = () => {
     return (
@@ -22,8 +23,10 @@ const App = () => {
             </nav>
 
             <TemplateSelector/>
+            <TemplateEditor/>
             <DevConsole/>
         </div>
+
     )
 }
 

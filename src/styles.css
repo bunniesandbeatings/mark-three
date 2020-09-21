@@ -23,23 +23,3 @@ body {
 }
 
 
-.dropdown {
-    @apply block;
-    @apply appearance-none;
-    @apply border;
-    @apply py-1;
-    @apply px-4;
-    @apply pr-8;
-    @apply rounded;
-    @apply leading-tight;
-
-}
-
-.dropdown-default {
-    @apply bg-white;
-    @apply border-white;
-    @apply text-gray-900;
-}
-
-
-  /*appearance-none bg-gray-200 border border-white text-gray-900 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white*/
