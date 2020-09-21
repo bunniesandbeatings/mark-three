@@ -4,10 +4,17 @@ import {loadTemplate} from "../lib/mkIII/mkIII"
 import {parseRawTemplate} from "../lib/mkIII/util"
 import _ from "lodash"
 
+const BUTTON_TYPE_MOMENTARY = "momentary"
+const BUTTON_TYPE_TOGGLE = "toggle"
+const BUTTON_TYPE_STEP = "step"
+const BUTTON_TYPE_TRIGGER = "trigger"
+
 const emptyButton = id => ({
     id,
     displayID: id + 1,
-    name: `Button${id + 1}`
+    name: `Button${id + 1}`,
+    enabled: true,
+    type: BUTTON_TYPE_MOMENTARY,
 })
 
 const emptyTemplate = id => ({
@@ -31,7 +38,6 @@ const index = createSlice({
         },
         setRawTemplate(state, {payload: {id, raw, parsed}}) {
             state.raw[id] = raw
-            // TODO: show Dashboard Team
             state.parsed[id] = _.merge(state.parsed[id], parsed)
             return state
         },
@@ -40,6 +46,15 @@ const index = createSlice({
             template[field] = value
             state.parsed[id] = template
             return state
+        },
+        setButtonField(state, {payload: {templateID, buttonID, field, value}}) {
+            const template = state.parsed[templatedID]
+            const button = template.buttons[buttonID]
+            // _.merge(state.parsed[templateID].buttons[buttonID],
+            //         {...state.parsed[templateID].buttons[buttonID], enabled: !!value})
+
+
+            return state
         }
     }
 })
@@ -47,7 +62,8 @@ const index = createSlice({
 export const {
     selectTemplate,
     setRawTemplate,
-    setTemplateField
+    setTemplateField,
+    setButtonField,
 } = index.actions
 
 export const useTemplates = () =>
@@ -64,6 +80,11 @@ export const useActiveParsedTemplate = () =>
 export const useActiveTemplateID = () =>
     useSelector(state => {
         return state.templates.active
+    })
+
+export const useButton = (templateID, buttonID) =>
+    useSelector(state => {
+        return state.templates.parsed[templateID].buttons[buttonID]
     })
 
 export const fetchTemplate = (templateID) => (dispatch) => {
