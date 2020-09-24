@@ -1,7 +1,7 @@
 import React from "react"
-import MarkThreeConnect from "./components/MarkThreeConnect"
-import TemplateSelector from "./components/TemplateSelector"
-import DevConsole from "./components/DevConsole"
+// import MarkThreeConnect from "./components/MarkThreeConnect"
+import Menu from "./components/Menu"
+// import DevConsole from "./components/DevConsole"
 import logo from "./images/logo.svg"
 import TemplateEditor from "./components/TemplateEditor"
 
@@ -18,15 +18,15 @@ const App = () => {
                     <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
                         <div className="text-sm lg:flex-grow"/>
                         <div>
-                            <MarkThreeConnect/>
+                            {/*<MarkThreeConnect/>*/}
                         </div>
                     </div>
                 </nav>
-                <TemplateSelector/>
+                <Menu/>
             </div>
             <div id="scrollable" className="overflow-auto">
                 <TemplateEditor/>
-                <DevConsole/>
+                {/*<DevConsole/>*/}
             </div>
         </div>
     )

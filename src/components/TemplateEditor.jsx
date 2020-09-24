@@ -1,5 +1,5 @@
 import React from "react"
-import {setButtonField, setTemplateField, useActiveParsedTemplate, useButton} from "../templates"
+import {setButtonField, setTemplateField, useActiveTemplate, useButton} from "../templates"
 import {useDispatch} from "react-redux"
 import {inputClasses} from "../util/ui"
 
@@ -83,139 +83,139 @@ const CheckEntry = ({id, value, defaultValue, onChange, label = "", className = 
         />
     </div>
 
-const ButtonParam = ({templateID, buttonID}) => {
+const ButtonParam = ({buttonID}) => {
     const dispatch = useDispatch()
-    const button = useButton(templateID, buttonID)
+    const button = useButton(buttonID)
 
-    const handleCheckChange = field =>
-            e => dispatch(setButtonField({templateID,buttonID,field, value: e.target.checked}))
+    const handleCheckedChange = field =>
+        e => dispatch(setButtonField({id: buttonID, field, value: e.target.checked}))
+
+    const handleValueChange = field =>
+        e => dispatch(setButtonField({id: buttonID, field, value: e.target.value}))
+
+    const buttonTitle = `Button ${button.displayID}`
 
     return <div className="flex flex-row gap-2">
         <TextEntry
             className={"w-32"}
-            placeholder="name"
-            label={`Button ${button.displayID}`}
-            id={`button_${button.id}_name`}
+            placeholder={`${buttonTitle} name`}
+            label={buttonTitle}
             maxLength={9}
             value={button.name}
+            onChange={handleValueChange('name')}
         />
         <CheckEntry
             label="Enable"
             value={button.enabled}
-            onChange={handleCheckChange("enabled")}
+            onChange={handleCheckedChange("enabled")}
         />
-        <SelectEntry
-            className={"w-32"}
-            label="Type"
-            id={`button_${button.id}_type`}>
-            <option>Momentary</option>
-            <option>Toggle</option>
-            <option>Inc/Dec</option>
-            <option>Trigger</option>
-        </SelectEntry>
-        <SelectEntry
-            className={"w-32"}
-            id={`button_${button.id}_edge`}
-        >
-            <option>On Push</option>
-            <option>On Release</option>
-        </SelectEntry>
-        <NumericEntry
-            className={"w-20"}
-            label="Step"
-            id={`button_${button.id}_step`}
-            min={-8191} max={8191}
-        />
-        <SelectEntry
-            className={"w-32"}
-            label="MIDI"
-            id={`button_${button.id}_midi`}>
-            <option>CC</option>
-            <option>NRPN</option>
-            <option>Note</option>
-            <option>Prg. Change</option>
-            <option>Song Pos.</option>
-        </SelectEntry>
-        <NumericEntry
-            className={"w-20"}
-            label="CC #"
-            id={`button_${button.id}_cc_number`}
-            min={0} max={127}
-        />
-        <SelectEntry
-            className={"w-32"}
-            label="Channel"
-            id={`button_${button.id}_channel`}>
-            <option>Default</option>
-            <option>Channel 1</option>
-            <option>Channel 2</option>
-            <option>Channel 3</option>
-            <option>Channel 4</option>
-            <option>Channel 5</option>
-            <option>Channel 6</option>
-            <option>Channel 7</option>
-            <option>Channel 8</option>
-            <option>Channel 9</option>
-            <option>Channel 10</option>
-            <option>Channel 11</option>
-            <option>Channel 12</option>
-            <option>Channel 13</option>
-            <option>Channel 14</option>
-            <option>Channel 15</option>
-            <option>Channel 16</option>
-        </SelectEntry>
-        <NumericEntry
-            label="Min Value"
-            className={"w-20"}
-            id={`button_${button.id}_min`}
-            min={0} max={127}
-        />
-        <NumericEntry
-            label="Max Value"
-            className={"w-20"}
-            id={`button_${button.id}_max`}
-            value={127}
-            min={0} max={127}
-        />
-        <SelectEntry
-            label="Bit Depth"
-            className={"w-32"}
-            id={`button_${button.id}_bit_depth`}>
-            <option>7 Bits</option>
-            <option>8 Bits scaled</option>
-            <option>14 bits</option>
-        </SelectEntry>
-        <CheckEntry
-            label="Wrap"
-        />
-        <CheckEntry
-            label="Pair"
-        />
+        {/*<SelectEntry*/}
+        {/*    className={"w-32"}*/}
+        {/*    label="Type"*/}
+        {/*    id={`button_${button.id}_type`}>*/}
+        {/*    <option>Momentary</option>*/}
+        {/*    <option>Toggle</option>*/}
+        {/*    <option>Inc/Dec</option>*/}
+        {/*    <option>Trigger</option>*/}
+        {/*</SelectEntry>*/}
+        {/*<SelectEntry*/}
+        {/*    className={"w-32"}*/}
+        {/*    id={`button_${button.id}_edge`}*/}
+        {/*>*/}
+        {/*    <option>On Push</option>*/}
+        {/*    <option>On Release</option>*/}
+        {/*</SelectEntry>*/}
+        {/*<NumericEntry*/}
+        {/*    className={"w-20"}*/}
+        {/*    label="Step"*/}
+        {/*    id={`button_${button.id}_step`}*/}
+        {/*    min={-8191} max={8191}*/}
+        {/*/>*/}
+        {/*<SelectEntry*/}
+        {/*    className={"w-32"}*/}
+        {/*    label="MIDI"*/}
+        {/*    id={`button_${button.id}_midi`}>*/}
+        {/*    <option>CC</option>*/}
+        {/*    <option>NRPN</option>*/}
+        {/*    <option>Note</option>*/}
+        {/*    <option>Prg. Change</option>*/}
+        {/*    <option>Song Pos.</option>*/}
+        {/*</SelectEntry>*/}
+        {/*<NumericEntry*/}
+        {/*    className={"w-20"}*/}
+        {/*    label="CC #"*/}
+        {/*    id={`button_${button.id}_cc_number`}*/}
+        {/*    min={0} max={127}*/}
+        {/*/>*/}
+        {/*<SelectEntry*/}
+        {/*    className={"w-32"}*/}
+        {/*    label="Channel"*/}
+        {/*    id={`button_${button.id}_channel`}>*/}
+        {/*    <option>Default</option>*/}
+        {/*    <option>Channel 1</option>*/}
+        {/*    <option>Channel 2</option>*/}
+        {/*    <option>Channel 3</option>*/}
+        {/*    <option>Channel 4</option>*/}
+        {/*    <option>Channel 5</option>*/}
+        {/*    <option>Channel 6</option>*/}
+        {/*    <option>Channel 7</option>*/}
+        {/*    <option>Channel 8</option>*/}
+        {/*    <option>Channel 9</option>*/}
+        {/*    <option>Channel 10</option>*/}
+        {/*    <option>Channel 11</option>*/}
+        {/*    <option>Channel 12</option>*/}
+        {/*    <option>Channel 13</option>*/}
+        {/*    <option>Channel 14</option>*/}
+        {/*    <option>Channel 15</option>*/}
+        {/*    <option>Channel 16</option>*/}
+        {/*</SelectEntry>*/}
+        {/*<NumericEntry*/}
+        {/*    label="Min Value"*/}
+        {/*    className={"w-20"}*/}
+        {/*    id={`button_${button.id}_min`}*/}
+        {/*    min={0} max={127}*/}
+        {/*/>*/}
+        {/*<NumericEntry*/}
+        {/*    label="Max Value"*/}
+        {/*    className={"w-20"}*/}
+        {/*    id={`button_${button.id}_max`}*/}
+        {/*    value={127}*/}
+        {/*    min={0} max={127}*/}
+        {/*/>*/}
+        {/*<SelectEntry*/}
+        {/*    label="Bit Depth"*/}
+        {/*    className={"w-32"}*/}
+        {/*    id={`button_${button.id}_bit_depth`}>*/}
+        {/*    <option>7 Bits</option>*/}
+        {/*    <option>8 Bits scaled</option>*/}
+        {/*    <option>14 bits</option>*/}
+        {/*</SelectEntry>*/}
+        {/*<CheckEntry*/}
+        {/*    label="Wrap"*/}
+        {/*/>*/}
+        {/*<CheckEntry*/}
+        {/*    label="Pair"*/}
+        {/*/>*/}
     </div>
 }
 
 const TemplateEditor = () => {
-    const parsed = useActiveParsedTemplate()
+    const template = useActiveTemplate()
     const dispatch = useDispatch()
 
-    const handleFieldChange = field => e => dispatch(
-        setTemplateField({
-            id: parsed.id,
-            field,
-            value: e.target.value
-        })
-    )
+    const handleValueChange = field =>
+        e => dispatch(setTemplateField({id: template.id, field, value: e.target.value}))
 
     return <div className="flex flex-col flex-wrap p-2 shadow border border-gray-300 rounded m-3 bg-primary-100">
         <TextEntry
             label={"Title"}
             id={`template_name`}
             maxLength={16}
-            value={parsed.name}
-            onChange={handleFieldChange("name")}
+            value={template.name}
+            onChange={handleValueChange("name")}
             pattern="[\x20-\x7E]+"
         />
-        {parsed.buttons.map(button => <ButtonParam key={button.id} buttonID={button.id} templateID={parsed.id}/>)}
+        {template.buttons.map(buttonID => <ButtonParam key={buttonID} buttonID={buttonID}/>)}
 
     </div>
 }
