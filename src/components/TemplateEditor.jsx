@@ -2,6 +2,15 @@ import React from "react"
 import {setButtonField, setTemplateField, useActiveTemplate, useButton} from "../templates"
 import {useDispatch} from "react-redux"
 import {inputClasses} from "../util/ui"
+import '../lib/mkIII/model'
+import {BUTTON_TYPE_MOMENTARY, BUTTON_TYPE_STEP, BUTTON_TYPE_TOGGLE, BUTTON_TYPE_TRIGGER} from '../lib/mkIII/model'
+
+export const BUTTON_TYPES = [
+    {type: BUTTON_TYPE_MOMENTARY, name: "Momentary"},
+    {type: BUTTON_TYPE_TOGGLE, name: "Toggle"},
+    {type: BUTTON_TYPE_STEP, name: "Inc/Dec"},
+    {type: BUTTON_TYPE_TRIGGER, name: "Trigger"},
+]
 
 const Label = ({children}) => <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold h-4"
                                      htmlFor="grid-first-name">
@@ -39,13 +48,16 @@ const NumericEntry = ({label, id, step = 1, max = 127, min = 0, value, onChange,
         />
     </div>
 
-const SelectEntry = ({id, children, label = "", className}) =>
+const SelectEntry = ({id, children, value, onChange, label = "", className}) =>
     <div className={className}>
         <Label>{label}</Label>
         <div className="relative">
             <select
                 className={inputClasses()}
-                id={id}>
+                id={id}
+                value={value}
+                onChange={onChange}
+            >
                 {children}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-900">
@@ -109,15 +121,15 @@ const ButtonParam = ({buttonID}) => {
             value={button.enabled}
             onChange={handleCheckedChange("enabled")}
         />
-        {/*<SelectEntry*/}
-        {/*    className={"w-32"}*/}
-        {/*    label="Type"*/}
-        {/*    id={`button_${button.id}_type`}>*/}
-        {/*    <option>Momentary</option>*/}
-        {/*    <option>Toggle</option>*/}
-        {/*    <option>Inc/Dec</option>*/}
-        {/*    <option>Trigger</option>*/}
-        {/*</SelectEntry>*/}
+        <SelectEntry
+            className={"w-32"}
+            label="Type"
+            id={`button_${button.id}_type`}
+            value={button.type}
+            onChange={handleValueChange('type')}
+        >
+            {BUTTON_TYPES.map(buttonType => <option key={buttonType.type} value={buttonType.type}>{buttonType.name}</option>)}
+        </SelectEntry>
         {/*<SelectEntry*/}
         {/*    className={"w-32"}*/}
         {/*    id={`button_${button.id}_edge`}*/}

@@ -1,9 +1,9 @@
 import _ from 'lodash'
 
-const BUTTON_TYPE_MOMENTARY = "momentary"
-const BUTTON_TYPE_TOGGLE = "toggle"
-const BUTTON_TYPE_STEP = "step"
-const BUTTON_TYPE_TRIGGER = "trigger"
+export const BUTTON_TYPE_MOMENTARY = "momentary"
+export const BUTTON_TYPE_TOGGLE = "toggle"
+export const BUTTON_TYPE_STEP = "step"
+export const BUTTON_TYPE_TRIGGER = "trigger"
 
 export const emptyButton = id => ({
     id,
@@ -11,6 +11,7 @@ export const emptyButton = id => ({
     name: `Button${id + 1}`,
     enabled: true,
     type: BUTTON_TYPE_MOMENTARY,
+
 })
 
 export const emptyTemplate = id => ({
