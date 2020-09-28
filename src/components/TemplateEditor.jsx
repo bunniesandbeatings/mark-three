@@ -3,29 +3,68 @@ import {setButtonField, setTemplateField, useActiveTemplate, useButton} from "..
 import {useDispatch} from "react-redux"
 import '../lib/mkIII/model'
 import {
+    BIT_DEPTH_14,
+    BIT_DEPTH_7, BIT_DEPTH_8,
     BUTTON_TYPE_MOMENTARY,
     BUTTON_TYPE_STEP,
     BUTTON_TYPE_TOGGLE,
-    BUTTON_TYPE_TRIGGER, EDGE_FALLING,
-    EDGE_RISING
+    BUTTON_TYPE_TRIGGER, CHANNEL_DEFAULT, EDGE_FALLING,
+    EDGE_RISING, MIDI_TYPE_CC, MIDI_TYPE_NOTE, MIDI_TYPE_NRPN, MIDI_TYPE_PROGRAM_CHANGE, MIDI_TYPE_SONG_POSITION
 } from '../lib/mkIII/model'
-import {CheckEntry, CollectionOptions, SelectEntry, TextEntry} from './fields'
+import {CheckEntry, CollectionOptions, NumericEntry, SelectEntry, TextEntry} from './fields'
 
 const BUTTON_TYPES = [
-    {type: BUTTON_TYPE_MOMENTARY, name: "Momentary"},
-    {type: BUTTON_TYPE_TOGGLE, name: "Toggle"},
-    {type: BUTTON_TYPE_STEP, name: "Inc/Dec"},
-    {type: BUTTON_TYPE_TRIGGER, name: "Trigger"},
+    {value: BUTTON_TYPE_MOMENTARY, name: "Momentary"},
+    {value: BUTTON_TYPE_TOGGLE, name: "Toggle"},
+    {value: BUTTON_TYPE_STEP, name: "Inc/Dec"},
+    {value: BUTTON_TYPE_TRIGGER, name: "Trigger"},
 ]
 
 const EDGE_TYPES = [
-    {type: EDGE_RISING, name: "On Press"},
-    {type: EDGE_FALLING, name: "On Release"},
+    {value: EDGE_RISING, name: "On Press"},
+    {value: EDGE_FALLING, name: "On Release"},
+]
+
+const MIDI_TYPES = [
+    {value: MIDI_TYPE_CC, name: "CC"},
+    {value: MIDI_TYPE_NRPN, name: "NRPN"},
+    {value: MIDI_TYPE_NOTE, name: "Note"},
+    {value: MIDI_TYPE_PROGRAM_CHANGE, name: "Prg. Change"},
+    {value: MIDI_TYPE_SONG_POSITION, name: "Song Pos."},
+]
+
+const CHANNELS = [
+    {value: CHANNEL_DEFAULT, name: "Default"},
+    {value: 1, name: "Channel 1"},
+    {value: 2, name: "Channel 2"},
+    {value: 3, name: "Channel 3"},
+    {value: 4, name: "Channel 4"},
+    {value: 5, name: "Channel 5"},
+    {value: 6, name: "Channel 6"},
+    {value: 7, name: "Channel 7"},
+    {value: 8, name: "Channel 8"},
+    {value: 9, name: "Channel 9"},
+    {value: 10, name: "Channel 10"},
+    {value: 11, name: "Channel 11"},
+    {value: 12, name: "Channel 12"},
+    {value: 13, name: "Channel 13"},
+    {value: 14, name: "Channel 14"},
+    {value: 15, name: "Channel 15"},
+    {value: 16, name: "Channel 16"},
+]
+
+const BIT_DEPTHS = [
+    {value: BIT_DEPTH_7, name: "7 Bits"},
+    {value: BIT_DEPTH_8, name: "8 Bits (scaled)"},
+    {value: BIT_DEPTH_14, name: "14 Bits"},
+
 ]
 
 const buttonTypeOptions = CollectionOptions(BUTTON_TYPES)
 const edgeTypeOptions = CollectionOptions(EDGE_TYPES)
-
+const midiTypeOptions = CollectionOptions(MIDI_TYPES)
+const channelOptions = CollectionOptions(CHANNELS)
+const bitDepthOptions = CollectionOptions(BIT_DEPTHS)
 
 const ButtonParam = ({buttonID}) => {
     const dispatch = useDispatch()
@@ -69,77 +108,71 @@ const ButtonParam = ({buttonID}) => {
         >
             {edgeTypeOptions}
         </SelectEntry>
-        {/*<NumericEntry*/}
-        {/*    className={"w-20"}*/}
-        {/*    label="Step"*/}
-        {/*    id={`button_${button.id}_step`}*/}
-        {/*    min={-8191} max={8191}*/}
-        {/*/>*/}
-        {/*<SelectEntry*/}
-        {/*    className={"w-32"}*/}
-        {/*    label="MIDI"*/}
-        {/*    id={`button_${button.id}_midi`}>*/}
-        {/*    <option>CC</option>*/}
-        {/*    <option>NRPN</option>*/}
-        {/*    <option>Note</option>*/}
-        {/*    <option>Prg. Change</option>*/}
-        {/*    <option>Song Pos.</option>*/}
-        {/*</SelectEntry>*/}
-        {/*<NumericEntry*/}
-        {/*    className={"w-20"}*/}
-        {/*    label="CC #"*/}
-        {/*    id={`button_${button.id}_cc_number`}*/}
-        {/*    min={0} max={127}*/}
-        {/*/>*/}
-        {/*<SelectEntry*/}
-        {/*    className={"w-32"}*/}
-        {/*    label="Channel"*/}
-        {/*    id={`button_${button.id}_channel`}>*/}
-        {/*    <option>Default</option>*/}
-        {/*    <option>Channel 1</option>*/}
-        {/*    <option>Channel 2</option>*/}
-        {/*    <option>Channel 3</option>*/}
-        {/*    <option>Channel 4</option>*/}
-        {/*    <option>Channel 5</option>*/}
-        {/*    <option>Channel 6</option>*/}
-        {/*    <option>Channel 7</option>*/}
-        {/*    <option>Channel 8</option>*/}
-        {/*    <option>Channel 9</option>*/}
-        {/*    <option>Channel 10</option>*/}
-        {/*    <option>Channel 11</option>*/}
-        {/*    <option>Channel 12</option>*/}
-        {/*    <option>Channel 13</option>*/}
-        {/*    <option>Channel 14</option>*/}
-        {/*    <option>Channel 15</option>*/}
-        {/*    <option>Channel 16</option>*/}
-        {/*</SelectEntry>*/}
-        {/*<NumericEntry*/}
-        {/*    label="Min Value"*/}
-        {/*    className={"w-20"}*/}
-        {/*    id={`button_${button.id}_min`}*/}
-        {/*    min={0} max={127}*/}
-        {/*/>*/}
-        {/*<NumericEntry*/}
-        {/*    label="Max Value"*/}
-        {/*    className={"w-20"}*/}
-        {/*    id={`button_${button.id}_max`}*/}
-        {/*    value={127}*/}
-        {/*    min={0} max={127}*/}
-        {/*/>*/}
-        {/*<SelectEntry*/}
-        {/*    label="Bit Depth"*/}
-        {/*    className={"w-32"}*/}
-        {/*    id={`button_${button.id}_bit_depth`}>*/}
-        {/*    <option>7 Bits</option>*/}
-        {/*    <option>8 Bits scaled</option>*/}
-        {/*    <option>14 bits</option>*/}
-        {/*</SelectEntry>*/}
-        {/*<CheckEntry*/}
-        {/*    label="Wrap"*/}
-        {/*/>*/}
-        {/*<CheckEntry*/}
-        {/*    label="Pair"*/}
-        {/*/>*/}
+        <NumericEntry
+            className={"w-20"}
+            label="Step"
+            min={-8191} max={8191}
+            onChange={handleValueChange('step')}
+            value={button.step}
+        />
+        <SelectEntry
+            className={"w-32"}
+            label="MIDI"
+            value={button.midiType}
+            onChange={handleValueChange('midiType')}
+        >
+            {midiTypeOptions}
+        </SelectEntry>
+        {
+            button.midiType === MIDI_TYPE_CC &&
+            <NumericEntry
+                className={"w-20"}
+                label="CC #"
+                min={0} max={127}
+                onChange={handleValueChange('cc')}
+                value={button.cc}
+            />
+        }
+        <SelectEntry
+            className={"w-32"}
+            label="Channel"
+            value={button.channel}
+            onChange={handleValueChange('channel')}
+        >
+            {channelOptions}
+        </SelectEntry>
+        <NumericEntry
+            className={"w-20"}
+            label="Min Value"
+            min={0} max={127}
+            onChange={handleValueChange('min')}
+            value={button.min}
+        />
+        <NumericEntry
+            className={"w-20"}
+            label="Max Value"
+            min={0} max={127}
+            onChange={handleValueChange('max')}
+            value={button.max}
+        />
+        <SelectEntry
+            className={"w-32"}
+            label="Bit Depth"
+            value={button.bitDepth}
+            onChange={handleValueChange('bitDepth')}
+        >
+            {bitDepthOptions}
+        </SelectEntry>
+        <CheckEntry
+            label="Wrap"
+            value={button.wrap}
+            onChange={handleCheckedChange("wrap")}
+        />
+        <CheckEntry
+            label="Pair"
+            value={button.pair}
+            onChange={handleCheckedChange("pair")}
+        />
     </div>
 }
 

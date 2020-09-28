@@ -50,7 +50,7 @@ export const TextEntry = ({label, id, maxLength, value, onChange, pattern, place
         />
     </div>
 
-export const NumericEntry = ({label, id, step = 1, max = 127, min = 0, value, onChange, defaultValue = 0, className}) =>
+export const NumericEntry = ({label, id, step = 1, max = 127, min = 0, value, onChange, className}) =>
     <div className={className}>
         <Label>{label}</Label>
         <input
@@ -58,7 +58,6 @@ export const NumericEntry = ({label, id, step = 1, max = 127, min = 0, value, on
             id={id}
             type="number"
             value={value}
-            defaultValue={defaultValue}
             onChange={onChange}
             step={step}
             max={max}
@@ -104,7 +103,7 @@ export const CollectionOptions = (collection) => {
         {
             collection.map(
                 edgeType =>
-                    <option key={edgeType.type} value={edgeType.type}>
+                    <option key={edgeType.value} value={edgeType.value}>
                         {edgeType.name}
                     </option>)
         }
