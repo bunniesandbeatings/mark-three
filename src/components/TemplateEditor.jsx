@@ -1,99 +1,31 @@
 import React from "react"
 import {setButtonField, setTemplateField, useActiveTemplate, useButton} from "../templates"
 import {useDispatch} from "react-redux"
-import {inputClasses} from "../util/ui"
 import '../lib/mkIII/model'
-import {BUTTON_TYPE_MOMENTARY, BUTTON_TYPE_STEP, BUTTON_TYPE_TOGGLE, BUTTON_TYPE_TRIGGER} from '../lib/mkIII/model'
+import {
+    BUTTON_TYPE_MOMENTARY,
+    BUTTON_TYPE_STEP,
+    BUTTON_TYPE_TOGGLE,
+    BUTTON_TYPE_TRIGGER, EDGE_FALLING,
+    EDGE_RISING
+} from '../lib/mkIII/model'
+import {CheckEntry, CollectionOptions, SelectEntry, TextEntry} from './fields'
 
-export const BUTTON_TYPES = [
+const BUTTON_TYPES = [
     {type: BUTTON_TYPE_MOMENTARY, name: "Momentary"},
     {type: BUTTON_TYPE_TOGGLE, name: "Toggle"},
     {type: BUTTON_TYPE_STEP, name: "Inc/Dec"},
     {type: BUTTON_TYPE_TRIGGER, name: "Trigger"},
 ]
 
-const Label = ({children}) => <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold h-4"
-                                     htmlFor="grid-first-name">
-    {children}
-</label>
+const EDGE_TYPES = [
+    {type: EDGE_RISING, name: "On Press"},
+    {type: EDGE_FALLING, name: "On Release"},
+]
 
-const TextEntry = ({label, id, maxLength, value, onChange, pattern, placeholder = "", className}) =>
-    <div className={className}>
-        <Label>{label}</Label>
-        <input
-            className={inputClasses()}
-            id={id}
-            type="text"
-            maxLength={maxLength}
-            placeholder={placeholder}
-            value={value}
-            pattern={pattern}
-            onChange={onChange}
-        />
-    </div>
+const buttonTypeOptions = CollectionOptions(BUTTON_TYPES)
+const edgeTypeOptions = CollectionOptions(EDGE_TYPES)
 
-const NumericEntry = ({label, id, step = 1, max = 127, min = 0, value, onChange, defaultValue = 0, className}) =>
-    <div className={className}>
-        <Label>{label}</Label>
-        <input
-            className={inputClasses()}
-            id={id}
-            type="number"
-            value={value}
-            defaultValue={defaultValue}
-            onChange={onChange}
-            step={step}
-            max={max}
-            min={min}
-        />
-    </div>
-
-const SelectEntry = ({id, children, value, onChange, label = "", className}) =>
-    <div className={className}>
-        <Label>{label}</Label>
-        <div className="relative">
-            <select
-                className={inputClasses()}
-                id={id}
-                value={value}
-                onChange={onChange}
-            >
-                {children}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-900">
-                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                </svg>
-            </div>
-        </div>
-    </div>
-
-const checkInputClasses = () => [
-    "border-primary-500",
-    "rounded",
-    "focus:bg-white",
-    "form-checkbox",
-    "h-5",
-    "w-5",
-    "mt-1",
-    "text-indigo-600",
-    "transition",
-    "duration-150",
-    "ease-in-out",
-].join(" ")
-
-const CheckEntry = ({id, value, defaultValue, onChange, label = "", className = ""}) =>
-    <div className={className + " align-middle text-center"}>
-        <Label>{label}</Label>
-        <input
-            className={checkInputClasses()}
-            id={id}
-            type="checkbox"
-            checked={value}
-            defaultValue={defaultValue}
-            onChange={onChange}
-        />
-    </div>
 
 const ButtonParam = ({buttonID}) => {
     const dispatch = useDispatch()
@@ -124,19 +56,19 @@ const ButtonParam = ({buttonID}) => {
         <SelectEntry
             className={"w-32"}
             label="Type"
-            id={`button_${button.id}_type`}
             value={button.type}
             onChange={handleValueChange('type')}
         >
-            {BUTTON_TYPES.map(buttonType => <option key={buttonType.type} value={buttonType.type}>{buttonType.name}</option>)}
+            {buttonTypeOptions}
         </SelectEntry>
-        {/*<SelectEntry*/}
-        {/*    className={"w-32"}*/}
-        {/*    id={`button_${button.id}_edge`}*/}
-        {/*>*/}
-        {/*    <option>On Push</option>*/}
-        {/*    <option>On Release</option>*/}
-        {/*</SelectEntry>*/}
+        <SelectEntry
+            className={"w-32"}
+            label="Edge"
+            value={button.edge}
+            onChange={handleValueChange('edge')}
+        >
+            {edgeTypeOptions}
+        </SelectEntry>
         {/*<NumericEntry*/}
         {/*    className={"w-20"}*/}
         {/*    label="Step"*/}

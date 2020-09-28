@@ -1,9 +1,9 @@
 import React from "react"
 import {useDispatch} from "react-redux"
 import _ from "lodash"
-import {inputClasses} from "../util/ui"
 import {fetchTemplate, selectTemplate, useActiveTemplateID, useTemplates} from '../templates'
 import {STATUS_FOUND, useMidi} from '../midi'
+import {inputClasses} from './fields'
 
 
 export const TemplateSelector = () => {
