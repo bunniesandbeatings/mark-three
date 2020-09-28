@@ -1,44 +1,45 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {useSelector} from "react-redux"
-import {loadTemplate} from "../lib/mkIII/mkIII"
-import {parseRawTemplate} from "../lib/mkIII/util"
+// import {loadTemplate} from "../lib/mkIII/mkIII"
+// import {parseRawTemplate} from "../lib/mkIII/util"
 import _ from "lodash"
+import {emptyTemplate} from '../lib/mkIII/model'
+import {templates} from '../lib/mkIII/schema'
+import {normalize} from 'normalizr'
+import {loadTemplate} from '../lib/mkIII/mkIII'
 
-const emptyButton = id => ({
-    id,
-    displayID: id + 1,
-    name: `Button${id + 1}`
-})
-
-const emptyTemplate = id => ({
-    id,
-    displayID: id + 1,
-    name: "<Empty>",
-    buttons: _.range(0, 16).map(id => emptyButton(id))
-})
+const generateEmpty = () => {
+    const emptyTemplates =_.range(64).map(index => emptyTemplate(index))
+    return normalize(emptyTemplates, templates)
+}
 
 const index = createSlice({
     name: 'templates',
     initialState: {
         raw: Array.from({length: 64}, () => []),  // Filled Array of Arrays
-        active: 0,
-        parsed: _.range(64).map(index => emptyTemplate(index)),
+        activeTemplateID: 0,
+        ...generateEmpty().entities
     },
     reducers: {
         selectTemplate(state, {payload: templateID}) {
-            state.active = templateID
+            state.activeTemplateID = templateID
             return state
         },
-        setRawTemplate(state, {payload: {id, raw, parsed}}) {
-            state.raw[id] = raw
-            // TODO: show Dashboard Team
-            state.parsed[id] = _.merge(state.parsed[id], parsed)
-            return state
-        },
+        // setRawTemplate(state, {payload: {id, raw, parsed}}) {
+        //     state.raw[id] = raw
+        //     state.parsed[id] = _.merge(state.parsed[id], parsed)
+        //     return state
+        // },
         setTemplateField(state, {payload: {id, field, value}}) {
-            const template = state.parsed[id]
+            const template = state.templates[id]
             template[field] = value
-            state.parsed[id] = template
+            // state.templates[id] = template
+            return state
+        },
+        setButtonField(state, {payload: {id, field, value}}) {
+            const button = state.buttons[id]
+            button[field] = value
+            // state.buttons[id] = button
             return state
         }
     }
@@ -46,36 +47,62 @@ const index = createSlice({
 
 export const {
     selectTemplate,
-    setRawTemplate,
-    setTemplateField
+    // setRawTemplate,
+    setTemplateField,
+    setButtonField,
 } = index.actions
 
-export const useTemplates = () =>
-    useSelector(state => {
-        return state.templates
-    })
+// export const useTemplates = () =>
+//     useSelector(state => {
+//         return state.templates
+//     })
+//
+// export const useActiveRawTemplate = () =>
+//     useSelector(state => state.templates.raw[state.templates.active])
+//
+// export const useActiveParsedTemplate = () =>
+//     useSelector(state => state.templates.parsed[state.templates.active])
+//
+//
+// export const useButton = (templateID, buttonID) =>
+//     useSelector(state => {
+//         return state.templates.parsed[templateID].buttons[buttonID]
+//     })
+//
 
-export const useActiveRawTemplate = () =>
-    useSelector(state => state.templates.raw[state.templates.active])
-
-export const useActiveParsedTemplate = () =>
-    useSelector(state => state.templates.parsed[state.templates.active])
-
-export const useActiveTemplateID = () =>
-    useSelector(state => {
-        return state.templates.active
-    })
-
+/// ---- ACTIONS
 export const fetchTemplate = (templateID) => (dispatch) => {
     loadTemplate(templateID, (template) => {
         dispatch(
             setRawTemplate({
                 id: template.id,
                 raw: template.data,
-                parsed: parseRawTemplate(template.data)
             })
         )
     })
 }
+
+
+/// ---- SELECTORS
+
+export const useActiveTemplateID = () =>
+    useSelector(state => {
+        return state.templates.activeTemplateID
+    })
+
+export const useActiveTemplate = () =>
+    useSelector(state => {
+        return state.templates.templates[state.templates.activeTemplateID]
+    })
+
+export const useButton = (id) =>
+    useSelector(state => {
+        return state.templates.buttons[id]
+    })
+
+export const useTemplates = () =>
+    useSelector(state => {
+        return state.templates.templates
+    })
 
 export default index.reducer
