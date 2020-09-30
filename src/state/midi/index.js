@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import {useSelector} from "react-redux"
 import WebMidi from "webmidi"
-import {discover} from "../lib/mkIII/mkIII"
+import {discover} from "../../lib/mkIII/mkIII"
 
 export const STATUS_ENABLING = "enabling"
 export const STATUS_SEARCHING = "searching"

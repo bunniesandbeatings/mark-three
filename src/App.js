@@ -3,7 +3,7 @@ import React from "react"
 import Menu from "./components/Menu"
 // import DevConsole from "./components/DevConsole"
 import logo from "./images/logo.svg"
-import TemplateEditor from "./components/TemplateEditor"
+import TemplateEditor from "./components/editor/TemplateEditor"
 
 const App = () => {
     return (

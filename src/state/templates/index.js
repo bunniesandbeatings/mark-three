@@ -3,17 +3,17 @@ import {useSelector} from "react-redux"
 // import {loadTemplate} from "../lib/mkIII/mkIII"
 // import {parseRawTemplate} from "../lib/mkIII/util"
 import _ from "lodash"
-import {emptyTemplate} from '../lib/mkIII/model'
-import {templates} from '../lib/mkIII/schema'
+import {emptyTemplate} from '../../lib/mkIII/model'
+import {templates} from '../../lib/mkIII/schema'
 import {normalize} from 'normalizr'
-import {loadTemplate} from '../lib/mkIII/mkIII'
+import {loadTemplate} from '../../lib/mkIII/mkIII'
 
 const generateEmpty = () => {
     const emptyTemplates =_.range(64).map(index => emptyTemplate(index))
     return normalize(emptyTemplates, templates)
 }
 
-const index = createSlice({
+const templateSlice = createSlice({
     name: 'templates',
     initialState: {
         raw: Array.from({length: 64}, () => []),  // Filled Array of Arrays
@@ -33,13 +33,11 @@ const index = createSlice({
         setTemplateField(state, {payload: {id, field, value}}) {
             const template = state.templates[id]
             template[field] = value
-            // state.templates[id] = template
             return state
         },
         setButtonField(state, {payload: {id, field, value}}) {
             const button = state.buttons[id]
             button[field] = value
-            // state.buttons[id] = button
             return state
         }
     }
@@ -50,25 +48,7 @@ export const {
     // setRawTemplate,
     setTemplateField,
     setButtonField,
-} = index.actions
-
-// export const useTemplates = () =>
-//     useSelector(state => {
-//         return state.templates
-//     })
-//
-// export const useActiveRawTemplate = () =>
-//     useSelector(state => state.templates.raw[state.templates.active])
-//
-// export const useActiveParsedTemplate = () =>
-//     useSelector(state => state.templates.parsed[state.templates.active])
-//
-//
-// export const useButton = (templateID, buttonID) =>
-//     useSelector(state => {
-//         return state.templates.parsed[templateID].buttons[buttonID]
-//     })
-//
+} = templateSlice.actions
 
 /// ---- ACTIONS
 export const fetchTemplate = (templateID) => (dispatch) => {
@@ -105,4 +85,4 @@ export const useTemplates = () =>
         return state.templates.templates
     })
 
-export default index.reducer
+export default templateSlice.reducer

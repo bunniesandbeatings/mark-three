@@ -1,6 +1,6 @@
 import React, {useState} from "react"
 import _ from "lodash"
-import {useActiveRawTemplate} from "../templates"
+import {useActiveRawTemplate} from "../state/templates"
 
 const PADDING = "_"
 const START_OF_FIELD = "■"

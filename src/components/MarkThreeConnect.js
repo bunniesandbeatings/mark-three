@@ -9,7 +9,7 @@ import {
     STATUS_NOT_FOUND,
     STATUS_SEARCHING,
     useMidi
-} from "../midi"
+} from "../state/midi"
 
 const statusText = {}
 statusText[STATUS_ENABLING] = "Enabling MIDI"

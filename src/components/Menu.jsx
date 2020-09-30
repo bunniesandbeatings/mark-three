@@ -1,9 +1,9 @@
 import React from "react"
 import {useDispatch} from "react-redux"
 import _ from "lodash"
-import {fetchTemplate, selectTemplate, useActiveTemplateID, useTemplates} from '../templates'
-import {STATUS_FOUND, useMidi} from '../midi'
-import {inputClasses} from './fields'
+import {fetchTemplate, selectTemplate, useActiveTemplateID, useTemplates} from '../state/templates'
+import {STATUS_FOUND, useMidi} from '../state/midi'
+import {SelectEntry} from './editor/fields'
 
 
 export const TemplateSelector = () => {
@@ -12,27 +12,21 @@ export const TemplateSelector = () => {
     const handleSelectChange = e => dispatch(selectTemplate(e.target.value))
     const activeTemplateID = useActiveTemplateID()
 
-    return <div className="relative">
-        <select
-            className={inputClasses("pr-6")}
-            onChange={handleSelectChange}
-            value={activeTemplateID}
-        >
-            {_.map(
-                templates,
-                ({id, displayID, name}) =>
-                    <option value={id} key={id}>
-                        {displayID}: {name}
-                    </option>
-            )}
-        </select>
-        <div
-            className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-900">
-            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-            </svg>
-        </div>
-    </div>
+    return <SelectEntry
+        label="template"
+        onChange={handleSelectChange}
+        value={activeTemplateID}
+        className={"w-48"}
+    >
+        {_.map(
+            templates,
+            ({id, displayID, name}) =>
+                <option value={id} key={id}>
+                    {displayID}: {name}
+                </option>
+        )}
+
+    </SelectEntry>
 }
 
 export const TransferMenu = () => {
