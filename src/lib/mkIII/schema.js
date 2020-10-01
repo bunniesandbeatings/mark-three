@@ -7,10 +7,18 @@ export const button = new schema.Entity(
 
 )
 
+export const knob = new schema.Entity(
+    'knobs',
+    {},
+    {idAttribute: (knob,parent) => `${parent.id}:${knob.id}`}
+
+)
+
 export const template = new schema.Entity(
     'templates',
     {
-        buttons: [button]
+        buttons: [button],
+        knobs: [knob],
     }
 );
 

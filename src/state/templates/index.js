@@ -39,6 +39,11 @@ const templateSlice = createSlice({
             const button = state.buttons[id]
             button[field] = value
             return state
+        },
+       setKnobField(state, {payload: {id, field, value}}) {
+            const knob = state.knobs[id]
+            knob[field] = value
+            return state
         }
     }
 })
@@ -48,6 +53,7 @@ export const {
     // setRawTemplate,
     setTemplateField,
     setButtonField,
+    setKnobField,
 } = templateSlice.actions
 
 /// ---- ACTIONS
@@ -78,6 +84,11 @@ export const useActiveTemplate = () =>
 export const useButton = (id) =>
     useSelector(state => {
         return state.templates.buttons[id]
+    })
+
+export const useKnob = (id) =>
+    useSelector(state => {
+        return state.templates.knobs[id]
     })
 
 export const useTemplates = () =>

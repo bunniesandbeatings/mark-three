@@ -24,10 +24,8 @@ const App = () => {
                 </nav>
                 <Menu/>
             </div>
-            <div id="scrollable" className="overflow-auto">
                 <TemplateEditor/>
                 {/*<DevConsole/>*/}
-            </div>
         </div>
     )
 }

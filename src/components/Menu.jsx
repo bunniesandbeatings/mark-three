@@ -52,7 +52,7 @@ export const TransferMenu = () => {
 
 export const Menu = () => {
     return (
-        <div className="flex items-center justify-between flex-wrap bg-primary-900 px-4 py-2">
+        <div className="flex items-center justify-between flex-wrap bg-primary-700 px-4 py-2">
             <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
                 <TemplateSelector/>
                 <TransferMenu/>

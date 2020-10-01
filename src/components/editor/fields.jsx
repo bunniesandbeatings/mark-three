@@ -62,7 +62,7 @@ export const TextEntry = ({label, id, disabled, maxLength, value, onChange, patt
         />
     </div>
 
-export const NumericEntry = ({label, id, disabled, step = 1, max = 127, min = 0, value, onChange, className}) =>
+export const NumericEntry = ({label, id, disabled, step = 1, max = 65535, min = 0, value, onChange, className}) =>
     <div className={className + " relative"}>
         <Label htmlFor={id}>{label}</Label>
         <input

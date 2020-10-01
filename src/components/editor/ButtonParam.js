@@ -5,13 +5,23 @@ import {setButtonField, useButton} from '../../state/templates'
 
 import {
     BIT_DEPTH_14,
-    BIT_DEPTH_7, BIT_DEPTH_8,
+    BIT_DEPTH_7,
+    BIT_DEPTH_8,
     BUTTON_TYPE_MOMENTARY,
     BUTTON_TYPE_STEP,
     BUTTON_TYPE_TOGGLE,
-    BUTTON_TYPE_TRIGGER, CHANNEL_DEFAULT, EDGE_FALLING,
-    EDGE_RISING, MIDI_TYPE_CC, MIDI_TYPE_NOTE, MIDI_TYPE_NRPN, MIDI_TYPE_PROGRAM_CHANGE, MIDI_TYPE_SONG_POSITION
+    BUTTON_TYPE_TRIGGER,
+    CHANNEL_DEFAULT,
+    EDGE_FALLING,
+    EDGE_RISING,
+    MAX_8_BIT,
+    MIDI_TYPE_CC,
+    MIDI_TYPE_NOTE,
+    MIDI_TYPE_NRPN,
+    MIDI_TYPE_PROGRAM_CHANGE,
+    MIDI_TYPE_SONG_POSITION
 } from '../../lib/mkIII/model'
+import {bitDepthOptions, channelOptions, midiTypeOptions} from './sharedConfig'
 
 
 const BUTTON_TYPES = [
@@ -26,46 +36,8 @@ const EDGE_TYPES = [
     {value: EDGE_FALLING, name: "On Release"},
 ]
 
-const MIDI_TYPES = [
-    {value: MIDI_TYPE_CC, name: "CC"},
-    {value: MIDI_TYPE_NRPN, name: "NRPN"},
-    {value: MIDI_TYPE_NOTE, name: "Note"},
-    {value: MIDI_TYPE_PROGRAM_CHANGE, name: "Prg. Change"},
-    {value: MIDI_TYPE_SONG_POSITION, name: "Song Pos."},
-]
-
-const CHANNELS = [
-    {value: CHANNEL_DEFAULT, name: "Default"},
-    {value: 1, name: "Channel 1"},
-    {value: 2, name: "Channel 2"},
-    {value: 3, name: "Channel 3"},
-    {value: 4, name: "Channel 4"},
-    {value: 5, name: "Channel 5"},
-    {value: 6, name: "Channel 6"},
-    {value: 7, name: "Channel 7"},
-    {value: 8, name: "Channel 8"},
-    {value: 9, name: "Channel 9"},
-    {value: 10, name: "Channel 10"},
-    {value: 11, name: "Channel 11"},
-    {value: 12, name: "Channel 12"},
-    {value: 13, name: "Channel 13"},
-    {value: 14, name: "Channel 14"},
-    {value: 15, name: "Channel 15"},
-    {value: 16, name: "Channel 16"},
-]
-
-const BIT_DEPTHS = [
-    {value: BIT_DEPTH_7, name: "7 Bits"},
-    {value: BIT_DEPTH_8, name: "8 Bits (scaled)"},
-    {value: BIT_DEPTH_14, name: "14 Bits"},
-
-]
-
 const buttonTypeOptions = CollectionOptions(BUTTON_TYPES)
 const edgeTypeOptions = CollectionOptions(EDGE_TYPES)
-const midiTypeOptions = CollectionOptions(MIDI_TYPES)
-const channelOptions = CollectionOptions(CHANNELS)
-const bitDepthOptions = CollectionOptions(BIT_DEPTHS)
 
 const Pos1 = ({button, handleCheckedChange}) =>
     <CheckEntry
@@ -150,7 +122,7 @@ const Pos7 = ({button, handleValueChange}) => {
                 className={"w-32"}
                 disabled={!button.enabled}
                 label="CC Number"
-                min={0} max={127}
+                min={0} max={MAX_8_BIT}
                 onChange={handleValueChange('cc')}
                 value={button.cc}
             />
@@ -160,7 +132,7 @@ const Pos7 = ({button, handleValueChange}) => {
                     className={"w-16"}
                     disabled={!button.enabled}
                     label="MSB"
-                    min={0} max={127}
+                    min={0} max={MAX_8_BIT}
                     onChange={handleValueChange('nrpnMS')}
                     value={button.nrpnMS}
                 />
@@ -168,7 +140,7 @@ const Pos7 = ({button, handleValueChange}) => {
                     className={"w-16"}
                     disabled={!button.enabled}
                     label="LSB"
-                    min={0} max={127}
+                    min={0} max={MAX_8_BIT}
                     onChange={handleValueChange('nrpnLS')}
                     value={button.nrpnLS}
                 />
@@ -178,7 +150,7 @@ const Pos7 = ({button, handleValueChange}) => {
                 className={"w-32"}
                 disabled={!button.enabled}
                 label="Note"
-                min={0} max={127}
+                min={0} max={MAX_8_BIT}
                 onChange={handleValueChange('note')}
                 value={button.note}
             />
@@ -300,6 +272,8 @@ export const ButtonParam = ({buttonID}) => {
         handleCheckedChange,
         buttonMax,
     }
+
+    console.log(`Rendering button ${buttonID}`)
 
     return <div className="flex flex-row">
         <Pos1 {...params} />
