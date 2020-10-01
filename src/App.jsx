@@ -1,9 +1,8 @@
 import React from "react"
-// import MarkThreeConnect from "./components/MarkThreeConnect"
 import Menu from "./components/Menu"
-// import DevConsole from "./components/DevConsole"
 import logo from "./images/logo.svg"
 import TemplateEditor from "./components/editor/TemplateEditor"
+import MarkThreeConnect from './components/MarkThreeConnect'
 
 const App = () => {
     return (
@@ -18,7 +17,7 @@ const App = () => {
                     <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
                         <div className="text-sm lg:flex-grow"/>
                         <div>
-                            {/*<MarkThreeConnect/>*/}
+                            <MarkThreeConnect/>
                         </div>
                     </div>
                 </nav>
