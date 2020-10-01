@@ -14,7 +14,7 @@ const MARK_THREE_PORT_NAME = "Novation SL MkIII SL MkIII MIDI"
 const noOpFn = () => {
 }
 
-const defaultTemplate = (id, callback = noOpFn) => (
+const defaultRawTemplate = (id, callback = noOpFn) => (
     {
         id: id,
         data: [],
@@ -23,7 +23,7 @@ const defaultTemplate = (id, callback = noOpFn) => (
     }
 )
 
-let rawTemplate = new Array(64)
+let rawTemplates = new Array(64)
 
 let input, output
 
@@ -69,8 +69,8 @@ const handleTemplateTransferCommand = (packet) => {
     let seqID = header[0x07]
     let templateID = header[0x09]
 
-    const template = rawTemplate[templateID]
-    const nextSeqID = template.lastSeqID + 1
+    const currentTemplate = rawTemplates[templateID]
+    const nextSeqID = currentTemplate.lastSeqID + 1
 
     switch (packetType) {
         case XFER_CMD_START: // currently looks safe to ignore
@@ -79,11 +79,11 @@ const handleTemplateTransferCommand = (packet) => {
             if (nextSeqID !== seqID) {
                 throw `Template fetch sequence error, expected: ${nextSeqID}, got: ${seqID}`
             }
-            template.lastSeqID = nextSeqID
-            template.data = template.data.concat(packet)
+            currentTemplate.lastSeqID = nextSeqID
+            currentTemplate.data = currentTemplate.data.concat(packet)
             break;
         case XFER_CMD_END:
-            template.onLoad(template)
+            currentTemplate.onLoad({id: currentTemplate.id, data: currentTemplate.data})
             break;
         default:
             throw `Template fetch error, got command id: ${toHex([packetType])}`
@@ -143,7 +143,7 @@ export const discover = () => {
 
 export const loadTemplate = (templateID, callback) => {
     templateID = Number(templateID)
-    rawTemplate[templateID] = defaultTemplate(templateID, callback)
+    rawTemplates[templateID] = defaultRawTemplate(templateID, callback)
 
     output.sendSysex(MFR_ID, SYSEX_templateGet(templateID))
 }

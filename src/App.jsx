@@ -23,8 +23,7 @@ const App = () => {
                 </nav>
                 <Menu/>
             </div>
-                <TemplateEditor/>
-                {/*<DevConsole/>*/}
+            <TemplateEditor/>
         </div>
     )
 }

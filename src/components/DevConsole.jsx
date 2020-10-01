@@ -1,6 +1,6 @@
 import React, {useState} from "react"
 import _ from "lodash"
-import {useActiveRawTemplate} from "../state/templates"
+import {useActiveRawTemplate, useActiveTemplate} from "../state/templates"
 
 const PADDING = "_"
 const START_OF_FIELD = "■"
@@ -73,8 +73,8 @@ export const DevConsole = () => {
         return null
     }
 
-    const raw = useActiveRawTemplate()
-
+    const raw = useActiveTemplate().raw
+console.log(raw)
     const [offset, setOffset] = useState(0)
     const [width, setWidth] = useState(22)
 

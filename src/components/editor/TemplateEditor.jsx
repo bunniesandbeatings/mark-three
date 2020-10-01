@@ -4,6 +4,7 @@ import {useDispatch} from "react-redux"
 import {ButtonParam} from './ButtonParam'
 import {TextEntry} from './fields'
 import {KnobParam} from './KnobParam'
+import DevConsole from '../DevConsole'
 
 
 const TemplateEditor = () => {
@@ -37,6 +38,7 @@ const TemplateEditor = () => {
                 <h2 id="buttons">Buttons</h2>
                 {template.buttons.map(buttonID => <ButtonParam key={buttonID} buttonID={buttonID}/>)}
             </div>
+            <DevConsole/>
         </div>
     </>
 }

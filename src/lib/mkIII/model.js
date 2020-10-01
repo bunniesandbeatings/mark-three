@@ -82,6 +82,7 @@ export const emptyTemplate = id => ({
     id,
     displayID: id + 1,
     name: "<Empty>",
+    raw: [],
     knobs: _.range(0, 16).map(id => emptyKnob(id)),
     buttons: _.range(0, 16).map(id => emptyButton(id)),
 })
