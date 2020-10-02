@@ -1,4 +1,5 @@
 import WebMidi from "webmidi"
+import {devlog} from '../util/log'
 
 const midiObj = (o) => {
     return {
@@ -10,8 +11,8 @@ const midiObj = (o) => {
 }
 
 const dumpConnections = () => {
-    console.log("in")
-    WebMidi.inputs.forEach(input => console.log(midiObj(input)))
-    console.log("out")
-    WebMidi.outputs.forEach(output => console.log(midiObj(output)))
+    devlog("MIDI Input Discovered")
+    WebMidi.inputs.forEach(input => devlog(midiObj(input)))
+    devlog("MIDI Output Discovered")
+    WebMidi.outputs.forEach(output => devlog(midiObj(output)))
 }

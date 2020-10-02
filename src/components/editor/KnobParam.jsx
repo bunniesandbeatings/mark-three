@@ -10,6 +10,7 @@ import {
     MIN_RESOLUTION
 } from '../../lib/mkIII/model'
 import {bitDepthOptions, channelOptions, midiTypeOptions} from './sharedConfig'
+import {devlog} from '../../util/log'
 
 const KNOB_TYPES = [
     {value: KNOB_TYPE_ABSOLUTE, name: "Absolute"},
@@ -205,7 +206,7 @@ export const KnobParam = ({knobID}) => {
         knobMax,
     }
 
-    console.log(`Rendering knob ${knobID}`)
+    devlog(`Rendering knob ${knobID}`)
 
     return <div className="flex flex-row">
         <Pos1 {...params} />

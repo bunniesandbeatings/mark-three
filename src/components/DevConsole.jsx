@@ -1,6 +1,6 @@
 import React, {useState} from "react"
 import _ from "lodash"
-import {useActiveRawTemplate, useActiveTemplate} from "../state/templates"
+import {useActiveTemplate} from "../state/templates"
 
 const PADDING = "_"
 const START_OF_FIELD = "■"
@@ -63,7 +63,7 @@ const HexPrinter = ({data, columns = 16, rows = 20, heading = false, rowHeading 
 
     let numLines = lines.length
     return <textarea readOnly rows={Math.min(numLines, rows)}
-                     cols={(columns * 3) + 3 + (rowHeading && rowHeadingPad.length) + columns} value={hex}
+                     cols={(columns * 3) + 6 + (rowHeading && rowHeadingPad.length) + columns} value={hex}
                      style={{"fontFamily": "Inconsolata", "fontSize": "12pt"}}/>
 }
 
@@ -74,7 +74,6 @@ export const DevConsole = () => {
     }
 
     const raw = useActiveTemplate().raw
-console.log(raw)
     const [offset, setOffset] = useState(0)
     const [width, setWidth] = useState(22)
 

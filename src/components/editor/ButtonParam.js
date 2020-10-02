@@ -22,6 +22,7 @@ import {
     MIDI_TYPE_SONG_POSITION
 } from '../../lib/mkIII/model'
 import {bitDepthOptions, channelOptions, midiTypeOptions} from './sharedConfig'
+import {devlog} from '../../util/log'
 
 
 const BUTTON_TYPES = [
@@ -273,7 +274,7 @@ export const ButtonParam = ({buttonID}) => {
         buttonMax,
     }
 
-    console.log(`Rendering button ${buttonID}`)
+    devlog(`Rendering button ${buttonID}`)
 
     return <div className="flex flex-row">
         <Pos1 {...params} />

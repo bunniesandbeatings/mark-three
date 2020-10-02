@@ -5,6 +5,7 @@ import {emptyTemplate} from '../../lib/mkIII/model'
 import {templates} from '../../lib/mkIII/schema'
 import {normalize} from 'normalizr'
 import {loadTemplate} from '../../lib/mkIII/mkIII'
+import {parseRawTemplate} from '../../lib/mkIII/parser'
 
 const generateEmpty = () => {
     const emptyTemplates = _.range(64).map(index => emptyTemplate(index))
@@ -26,6 +27,7 @@ const templateSlice = createSlice({
             const template = state.templates[id]
             template.raw = data
             state.templates[id] = template
+            parseRawTemplate({state, id, raw: data})
             return state
         },
         setTemplateField(state, {payload: {id, field, value}}) {
@@ -54,9 +56,11 @@ export const {
     setKnobField,
 } = templateSlice.actions
 
-/// ---- ACTIONS
+/// ---- Thunks
 export const fetchTemplate = (templateID) => (dispatch) =>
-    loadTemplate(templateID, (template) => {dispatch(setRawTemplate(template))})
+    loadTemplate(templateID, (template) => {
+        dispatch(setRawTemplate({id: template.id, data: template.data}))
+    })
 
 
 /// ---- SELECTORS

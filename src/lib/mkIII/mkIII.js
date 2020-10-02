@@ -1,6 +1,7 @@
 import WebMidi from "webmidi"
 import _ from "lodash"
 import {toHex} from "../../util/byte"
+import {devlog, log} from '../../util/log'
 
 const MFR_ID = [0x00, 0x20, 0x29]
 const CMD_XFER = [0x02, 0x0A, 0x03]
@@ -89,23 +90,24 @@ const handleTemplateTransferCommand = (packet) => {
             throw `Template fetch error, got command id: ${toHex([packetType])}`
     }
 }
+
 // rip out every 8th element starting at the 4th and then remove the header
 const unpack = packet => packet.filter((_, index) => (index - 3) % 8)
 
 const handleCommand = (command, packet) => {
-    // console.log(`INFO: Lookup command [${command}]`)
+    devlog(`INFO: Lookup command [${command}]`)
     if (_.isEqual(command, CMD_XFER)) {
         handleTemplateTransferCommand(packet)
         return
     }
-    console.log(`WARNING: Command not handled: [${command}]`)
+    log(`WARNING: Command not handled: [${command}]`)
 }
 
 const handleSysexInput = ({data}) => {
     data = Array.from(data)
     let {command, packet, match} = fromMKIII(data)
     if (!match) {
-        console.log("WARNING: received packet from non-MKIII MFR ID.")
+        log("WARNING: received packet from non-MKIII MFR ID.")
         return
     }
     let unpacked = unpack(packet)
