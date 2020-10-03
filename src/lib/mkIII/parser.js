@@ -19,16 +19,17 @@ const getTemplateName = raw =>
     toText(raw.slice(0x04, 0x14))
 
 const FIELD_NAME_START = 0x01
-const FIELD_NAME_END = 0x0A
+const FIELD_NAME_END = 0x09
+const FIELD_CC = 0x19
 
 function parseButton(raw, button) {
     const param = getParameter(raw, button.id, BUTTON_PARAM_OFFSET)
-    button.name = toText(param.slice(FIELD_NAME_START, FIELD_NAME_END))
+    button.name = toText(param.slice(FIELD_NAME_START, FIELD_NAME_END+1))
 }
 
 function parseKnob(raw, knob) {
     const param = getParameter(raw, knob.id, BUTTON_PARAM_OFFSET)
-    knob.name = toText(param.slice(FIELD_NAME_START, FIELD_NAME_END))
+    knob.name = toText(param.slice(FIELD_NAME_START, FIELD_NAME_END+1))
 }
 
 export const parseRawTemplate = ({state, id, raw}) => {
@@ -42,8 +43,7 @@ export const parseRawTemplate = ({state, id, raw}) => {
     })
 
     _.forEach(state.knobs, (knob) => {
-        const param = getParameter(raw, knob.id, KNOB_PARAM_OFFSET)
-        knob.name = toText(param.slice(FIELD_NAME_START, FIELD_NAME_END))
+        parseKnob(raw,knob)
     })
 
     return state
