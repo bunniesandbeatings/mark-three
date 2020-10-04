@@ -11,18 +11,18 @@
 
 ## Button Specific
 ```
-0x0C: Type
-    0x00: Momentary
-    0x01: Toggle
-    0x02: Step
-    0x03: Trigger
-
 0x0A: Midi Type
     0x00: Continuous Controller
     0x01: NRPN
     0x02: Note
     0x03: Program Change
     0x04: Song Position
+
+0x0C: Type
+    0x00: Momentary
+    0x01: Toggle
+    0x02: Step
+    0x03: Trigger
 
 0x0D:
     Toggle|Step|Trigger
